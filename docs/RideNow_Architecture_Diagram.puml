@@ -1,0 +1,61 @@
+@startuml
+title Figure 1. High-Level RideNow Architecture
+
+left to right direction
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam ArrowThickness 1.5
+skinparam rectangle {
+  RoundCorner 12
+}
+skinparam component {
+  BackgroundColor white
+  BorderColor black
+  FontColor black
+}
+skinparam note {
+  BackgroundColor white
+  BorderColor black
+}
+
+actor "Client App" as Client
+
+component "Broker Node" as Broker
+component "Notification Node" as Notification
+component "Driver Node" as Driver
+component "Route Node" as Route
+component "Pricing Node" as Pricing
+component "Payment Node" as Payment
+component "Tracking Node" as Tracking
+
+Client --> Broker : request / status
+
+Broker --> Notification : publish intents / events
+
+Notification --> Driver : assignment / availability events
+Notification --> Route : route / ETA requests
+Notification --> Pricing : pricing requests
+Notification --> Payment : payment requests
+Notification --> Tracking : trip state requests
+
+Driver --> Notification : location / availability updates
+Route --> Notification : route / ETA outcomes
+Pricing --> Notification : fare outcomes
+Payment --> Notification : payment outcomes
+Tracking --> Notification : trip status updates
+
+Notification --> Broker : downstream outcomes
+Broker --> Client : feedback / status
+
+note bottom of Notification
+Central asynchronous dissemination node
+for intents, updates, and service outcomes
+end note
+
+note bottom of Broker
+Single customer-facing coordination service
+end note
+
+@enduml

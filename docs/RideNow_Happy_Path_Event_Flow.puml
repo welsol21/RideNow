@@ -1,0 +1,60 @@
+@startuml
+title Figure 2. RideNow Happy Path Event Flow
+
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam ArrowThickness 1.3
+skinparam BoxPadding 10
+
+actor Client
+participant "Broker Node" as Broker
+participant "Notification Node" as Notification
+participant "Driver Node" as Driver
+participant "Route Node" as Route
+participant "Pricing Node" as Pricing
+participant "Payment Node" as Payment
+participant "Tracking Node" as Tracking
+
+Client -> Broker : Request Ride
+Broker --> Client : Ride request received\nSearching for driver
+
+Broker -> Notification : RideRequested
+
+par Driver allocation
+    Notification -> Driver : RideRequested
+    Driver --> Notification : DriverAssigned
+else Route computation
+    Notification -> Route : RouteRequested
+    Route --> Notification : RouteCalculated + ETA
+else Fare calculation
+    Notification -> Pricing : FareRequested
+    Pricing --> Notification : FareEstimated
+else Payment authorisation
+    Notification -> Payment : PaymentAuthorisationRequested
+    Payment --> Notification : PaymentAuthorised
+end
+
+Notification -> Broker : downstream outcomes
+Broker --> Client : Driver assigned\nDriver arriving in X min\nEstimated trip duration Y min
+
+loop While ride is active
+    Driver -> Notification : DriverLocationUpdated
+    Notification -> Tracking : DriverLocationUpdated
+    Tracking --> Notification : TripStatusUpdated
+
+    Notification -> Route : Recalculate ETA / Route
+    Route --> Notification : ETAUpdated / RouteRecalculated
+
+    Notification -> Broker : live ride outcomes
+    Broker --> Client : Driver nearby / Ride in progress / Updated ETA
+end
+
+Tracking -> Notification : TripCompleted
+Notification -> Payment : PaymentCaptureRequested
+Payment --> Notification : PaymentCaptured
+Notification -> Broker : final outcomes
+Broker --> Client : Ride completed\nPayment confirmed
+
+@enduml

@@ -32,6 +32,12 @@ This means that:
 
 The architecture is intended to support loose coupling, clear ownership, scalability, and eventual consistency.
 
+### Figure 1. High-Level RideNow Architecture
+
+![Figure 1. High-Level RideNow Architecture](High-Level_RideNow_Architecture.png)
+
+The diagram shows the client-facing role of the Broker, the central dissemination role of the Notification node, and the asynchronous propagation of state changes and outcomes across the other bounded capabilities.
+
 ---
 
 ## 3. Client-Oriented Platform View
@@ -416,6 +422,12 @@ The platform uses notifications/events such as:
 - IssueResolved
 
 These events enable asynchronous propagation and eventual consistency between nodes.
+
+### Figure 2. RideNow Happy Path Event Flow
+
+![Figure 2. RideNow Happy Path Event Flow](RideNow_Happy_Path_Event_Flow.png)
+
+The event-flow diagram illustrates one complete customer journey from ride request to payment confirmation, including event dissemination, route and fare calculation, live updates, and final settlement.
 
 ---
 
