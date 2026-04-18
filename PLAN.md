@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `2.7`
+- Next unchecked item: `2.8`
 
 ## Phase 0 - Bootstrap
 
@@ -41,7 +41,7 @@
 - [x] 2.4 UNIT-GREEN - implement minimal outbound stub adapter
 - [x] 2.5 UNIT-GREEN - wire composition root
 - [x] 2.6 ACC-GREEN - walking skeleton passes
-- [ ] 2.7 REFACTOR
+- [x] 2.7 REFACTOR
 - [ ] 2.8 PHASE 2 GATE
 - [ ] 2.9 Write docs/state/PHASE_2_DONE.md
 
