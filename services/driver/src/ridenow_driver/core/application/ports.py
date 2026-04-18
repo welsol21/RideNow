@@ -2,7 +2,6 @@
 
 from ridenow_shared.contracts import EventConsumer, EventPublisher, StateStore
 
-
 DriverStateStore = StateStore[dict[str, object]]
 DriverEventPublisher = EventPublisher
 DriverEventConsumer = EventConsumer

@@ -2,7 +2,6 @@
 
 from ridenow_shared.contracts import EventConsumer, EventPublisher, StateStore
 
-
 PaymentStateStore = StateStore[dict[str, object]]
 PaymentEventPublisher = EventPublisher
 PaymentEventConsumer = EventConsumer

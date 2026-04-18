@@ -2,7 +2,6 @@
 
 from ridenow_shared.contracts import EventConsumer, EventPublisher, StateStore
 
-
 TrackingStateStore = StateStore[dict[str, object]]
 TrackingEventPublisher = EventPublisher
 TrackingEventConsumer = EventConsumer
