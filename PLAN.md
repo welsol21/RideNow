@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `3.4`
+- Next unchecked item: `3.5`
 
 ## Phase 0 - Bootstrap
 
@@ -61,7 +61,7 @@
 - [x] 3.1 Define outbound ports for generated services
 - [x] 3.2 UNIT-RED - shared contract suite per port
 - [x] 3.3 UNIT-GREEN - in-memory adapters per port
-- [ ] 3.4 REFACTOR
+- [x] 3.4 REFACTOR
 - [ ] 3.5 PHASE 3 GATE
 - [ ] 3.6 Write docs/state/PHASE_3_DONE.md
 
