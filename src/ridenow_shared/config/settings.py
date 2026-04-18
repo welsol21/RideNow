@@ -31,7 +31,7 @@ class PostgresSettings(BaseSettings):
 
     Parameters:
         url: SQLAlchemy-compatible database URL.
-        schema: Logical schema name for service tables.
+        schema_name: Logical schema name for service tables.
     Return value:
         Instance holding PostgreSQL runtime configuration.
     Exceptions raised:
@@ -45,7 +45,7 @@ class PostgresSettings(BaseSettings):
     url: str = Field(
         default="postgresql+asyncpg://postgres:postgres@localhost:5432/ridenow"
     )
-    schema: str = Field(default="public")
+    schema_name: str = Field(default="public")
 
 
 class HttpSettings(BaseSettings):
