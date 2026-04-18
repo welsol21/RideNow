@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `4.1.5`
+- Next unchecked item: `4.1.6`
 
 ## Phase 0 - Bootstrap
 
@@ -73,7 +73,7 @@
 - [x] 4.1.2 Confirm failure reason
 - [x] 4.1.3 UNIT-RED
 - [x] 4.1.4 UNIT-GREEN
-- [ ] 4.1.5 UNIT-REFACTOR
+- [x] 4.1.5 UNIT-REFACTOR
 - [ ] 4.1.6 Repeat inward TDD until acceptance is green
 - [ ] 4.1.7 ACC-GREEN
 - [ ] 4.1.8 Run all prior acceptance tests
