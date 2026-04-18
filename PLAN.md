@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `4.1.3`
+- Next unchecked item: `4.1.4`
 
 ## Phase 0 - Bootstrap
 
@@ -71,7 +71,7 @@
 - [x] 4.1.0 Write docs/state/STORY_request-ride-acknowledgement_START.md
 - [x] 4.1.1 ACC-RED
 - [x] 4.1.2 Confirm failure reason
-- [ ] 4.1.3 UNIT-RED
+- [x] 4.1.3 UNIT-RED
 - [ ] 4.1.4 UNIT-GREEN
 - [ ] 4.1.5 UNIT-REFACTOR
 - [ ] 4.1.6 Repeat inward TDD until acceptance is green
