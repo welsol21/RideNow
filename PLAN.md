@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `2.2`
+- Next unchecked item: `2.3`
 
 ## Phase 0 - Bootstrap
 
@@ -36,7 +36,7 @@
 ## Phase 2 - Walking Skeleton
 
 - [x] 2.1 ACC-RED - acceptance test "health check returns ok"
-- [ ] 2.2 UNIT-GREEN - define HealthCheck port + trivial use case
+- [x] 2.2 UNIT-GREEN - define HealthCheck port + trivial use case
 - [ ] 2.3 UNIT-GREEN - implement minimal HTTP adapter
 - [ ] 2.4 UNIT-GREEN - implement minimal outbound stub adapter
 - [ ] 2.5 UNIT-GREEN - wire composition root
