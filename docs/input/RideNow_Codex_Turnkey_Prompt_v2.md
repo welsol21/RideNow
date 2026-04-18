@@ -57,6 +57,41 @@ the causes of a failing acceptance test. They are not an independent
 workstream and may not be invented ahead of the scenario that demands
 them.
 
+### 1.1B Start with full-system service connectivity
+
+Development must begin by proving that the **full set of required
+services can communicate end-to-end** through real service boundaries.
+
+Before deep implementation of individual services, write failing
+integration/acceptance tests that exercise the complete service graph
+for the main operating modes of the application.
+
+At minimum, those early full-system tests must cover:
+- normal customer-facing flow;
+- alternate success flows;
+- expected business failure flows;
+- recovery/retry or degraded-operation flows where applicable;
+- startup and shutdown behaviour of the composed stack;
+- manual/demo mode with dummy data.
+
+For RideNow, interpret "main operating modes" concretely as:
+- ride request acknowledgement;
+- driver assignment;
+- route and ETA feedback;
+- payment authorisation before ride execution;
+- trip progress updates including driver-arriving and in-progress states;
+- ride completion with payment confirmation;
+- no-driver-available failure handling;
+- payment-failed handling;
+- issue/complaint submission and routing;
+- stack startup and readiness;
+- stack shutdown and clean stop behaviour;
+- manual/demo operation with dummy/demo data.
+
+Do not treat service-by-service implementation as the starting point.
+The starting point is the failing proof that the whole RideNow system
+is wired together and behaves coherently across its operating modes.
+
 ### 1.2 Test pyramid you will produce
 
 - **Acceptance tests** — one per user story, written FIRST, exercising
@@ -115,6 +150,9 @@ Never jump ahead.
   without its own production runtime boundary.
 - Do **not** close a phase as complete while a required service or
   required inter-service flow is still represented only by simulation.
+- Do **not** begin by implementing isolated service internals before a
+  failing full-system integration scenario proves the required service
+  connectivity for the current operating mode.
 
 ---
 
@@ -625,6 +663,14 @@ Humans must not need to manually start or stop seven services one by
 one. Each service still needs its own composition root, but the system
 as a whole must be operable from a single top-level control entry.
 
+For local manual use, this requirement is strict:
+- exactly one top-level `start` command/script for the whole system;
+- exactly one top-level `stop` command/script for the whole system.
+
+The local `start` command must leave the platform in a **demo-ready
+state** with dummy/demo data loaded or bootstrapped, so that a human
+can immediately begin manual end-to-end verification.
+
 ### 8.3A Required verification of service collaboration
 
 For every customer-visible story that depends on more than one service,
@@ -633,6 +679,32 @@ service boundaries. If a story depends on Driver, Route, Pricing,
 Payment, Tracking, or Notification, the acceptance/integration layer
 must exercise those interactions as real message-driven flows, not as
 Broker-local shortcuts.
+
+The first development slice must establish **full-system integration
+coverage** for the major operating modes before deeper service-local
+implementation continues.
+
+That initial integration layer must prove:
+- all required services are present in the running topology;
+- all required service-to-service links are wired and observable;
+- the happy path traverses the real service graph;
+- the principal failure modes traverse the real service graph;
+- the manual/demo mode also runs through the real service graph.
+
+The explicit minimum operating-mode catalogue for that initial
+integration layer is:
+- request-ride-acknowledgement;
+- driver-assigned;
+- route-and-eta-feedback;
+- payment-authorised;
+- trip-progress;
+- ride-completed-payment-confirmed;
+- no-driver-available;
+- payment-failed;
+- issue-submitted;
+- stack-startup-readiness;
+- stack-shutdown;
+- manual-demo-mode.
 
 ### 8.4 Monitoring minimum
 Provide at least:
@@ -662,6 +734,10 @@ This means:
 - make it possible to manually trigger representative end-to-end flows;
 - ensure the local stack is usable for exploratory testing, not only CI;
 - document the minimum steps to simulate a realistic RideNow session.
+- make the documented local `start` command responsible for bringing
+  the system to demo-ready state;
+- make the documented local `stop` command responsible for cleanly
+  stopping the full local system.
 
 ---
 
@@ -697,12 +773,12 @@ When `PLAN.md` has zero unchecked boxes, the human must be able to:
 1. clone the repository;
 2. install dependencies;
 3. run the tests;
-4. start the local stack;
+4. start the local stack with the single documented top-level `start` command;
 5. run or inspect the Kubernetes manifests;
 6. identify which services were implemented in the project and how they interact;
 7. demonstrate at least one full event flow;
-8. manually drive the system with dummy/demo data after startup;
-9. stop the local stack cleanly from the documented top-level control path;
+8. manually drive the system with dummy/demo data after that one-command startup;
+9. stop the local stack cleanly with the single documented top-level `stop` command;
 10. read the documentation and understand the system quickly.
 
 That is "turnkey". Nothing less.
