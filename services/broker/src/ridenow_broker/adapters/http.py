@@ -30,4 +30,14 @@ def create_health_router(use_case: HealthCheckUseCase) -> APIRouter:
             "status": status.status,
         }
 
+    @router.get("/ready")
+    def readiness_check() -> dict[str, str]:
+        """Return the current broker readiness payload."""
+
+        status = use_case.execute()
+        return {
+            "service": status.service,
+            "status": "ready",
+        }
+
     return router
