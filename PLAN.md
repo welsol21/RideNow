@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `4.2.1`
+- Next unchecked item: `4.2.2`
 
 ## Phase 0 - Bootstrap
 
@@ -82,7 +82,7 @@
 
 ### 4.2 Story: driver-assigned
 - [x] 4.2.0 Write docs/state/STORY_driver-assigned_START.md
-- [ ] 4.2.1 ACC-RED
+- [x] 4.2.1 ACC-RED
 - [ ] 4.2.2 Confirm failure reason
 - [ ] 4.2.3 UNIT-RED
 - [ ] 4.2.4 UNIT-GREEN
