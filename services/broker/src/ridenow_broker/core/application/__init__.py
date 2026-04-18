@@ -5,9 +5,17 @@ from ridenow_broker.core.application.health import (
     HealthCheckUseCase,
     HealthStatus,
 )
+from ridenow_broker.core.application.request_ride import (
+    RequestRideCommand,
+    RequestRideResult,
+    RequestRideUseCase,
+)
 
 __all__ = [
     "HealthCheckPort",
     "HealthCheckUseCase",
     "HealthStatus",
+    "RequestRideCommand",
+    "RequestRideResult",
+    "RequestRideUseCase",
 ]
