@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `1.9`
+- Next unchecked item: `2.1`
 
 ## Phase 0 - Bootstrap
 
@@ -31,7 +31,7 @@
 - [x] 1.6 Create shared events/contracts/config package
 - [x] 1.7 Create Dockerfiles and base docker-compose
 - [x] 1.8 PHASE 1 GATE: lint + build
-- [ ] 1.9 Write docs/state/PHASE_1_DONE.md
+- [x] 1.9 Write docs/state/PHASE_1_DONE.md
 
 ## Phase 2 - Walking Skeleton
 
