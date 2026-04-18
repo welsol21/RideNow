@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `2.5`
+- Next unchecked item: `2.6`
 
 ## Phase 0 - Bootstrap
 
@@ -39,7 +39,7 @@
 - [x] 2.2 UNIT-GREEN - define HealthCheck port + trivial use case
 - [x] 2.3 UNIT-GREEN - implement minimal HTTP adapter
 - [x] 2.4 UNIT-GREEN - implement minimal outbound stub adapter
-- [ ] 2.5 UNIT-GREEN - wire composition root
+- [x] 2.5 UNIT-GREEN - wire composition root
 - [ ] 2.6 ACC-GREEN - walking skeleton passes
 - [ ] 2.7 REFACTOR
 - [ ] 2.8 PHASE 2 GATE
