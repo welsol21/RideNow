@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `3.5`
+- Next unchecked item: `3.6`
 
 ## Phase 0 - Bootstrap
 
@@ -62,7 +62,7 @@
 - [x] 3.2 UNIT-RED - shared contract suite per port
 - [x] 3.3 UNIT-GREEN - in-memory adapters per port
 - [x] 3.4 REFACTOR
-- [ ] 3.5 PHASE 3 GATE
+- [x] 3.5 PHASE 3 GATE
 - [ ] 3.6 Write docs/state/PHASE_3_DONE.md
 
 ## Phase 4 - User Stories (outside-in, one at a time)
