@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `3.1`
+- Next unchecked item: `3.2`
 
 ## Phase 0 - Bootstrap
 
@@ -58,7 +58,7 @@
 
 ## Phase 3 - Port Contracts & In-Memory Adapters
 
-- [ ] 3.1 Define outbound ports for generated services
+- [x] 3.1 Define outbound ports for generated services
 - [ ] 3.2 UNIT-RED - shared contract suite per port
 - [ ] 3.3 UNIT-GREEN - in-memory adapters per port
 - [ ] 3.4 REFACTOR
