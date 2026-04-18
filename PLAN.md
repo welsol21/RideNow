@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `1.5`
+- Next unchecked item: `1.6`
 
 ## Phase 0 - Bootstrap
 
@@ -27,7 +27,7 @@
 - [x] 1.2 Create dependency manifest with pinned versions
 - [x] 1.3 Create strict lint/format/type configs
 - [x] 1.4 Create CI pipeline
-- [ ] 1.5 Create .gitignore, .editorconfig, base README
+- [x] 1.5 Create .gitignore, .editorconfig, base README
 - [ ] 1.6 Create shared events/contracts/config package
 - [ ] 1.7 Create Dockerfiles and base docker-compose
 - [ ] 1.8 PHASE 1 GATE: lint + build
