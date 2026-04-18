@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `1.1`
+- Next unchecked item: `1.2`
 
 ## Phase 0 - Bootstrap
 
@@ -23,7 +23,7 @@
 
 ## Phase 1 - Skeleton
 
-- [ ] 1.1 Create directory tree
+- [x] 1.1 Create directory tree
 - [ ] 1.2 Create dependency manifest with pinned versions
 - [ ] 1.3 Create strict lint/format/type configs
 - [ ] 1.4 Create CI pipeline
