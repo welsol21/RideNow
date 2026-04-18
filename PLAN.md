@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `1.3`
+- Next unchecked item: `1.4`
 
 ## Phase 0 - Bootstrap
 
@@ -25,7 +25,7 @@
 
 - [x] 1.1 Create directory tree
 - [x] 1.2 Create dependency manifest with pinned versions
-- [ ] 1.3 Create strict lint/format/type configs
+- [x] 1.3 Create strict lint/format/type configs
 - [ ] 1.4 Create CI pipeline
 - [ ] 1.5 Create .gitignore, .editorconfig, base README
 - [ ] 1.6 Create shared events/contracts/config package

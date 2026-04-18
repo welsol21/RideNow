@@ -60,3 +60,107 @@ where = [
 include = [
   "ridenow_*",
 ]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+src = [
+  "src",
+  "services",
+  "tests",
+]
+
+[tool.ruff.lint]
+select = [
+  "E",
+  "F",
+  "I",
+  "B",
+  "UP",
+  "N",
+  "ASYNC",
+  "A",
+  "C4",
+  "DTZ",
+  "FA",
+  "ICN",
+  "PIE",
+  "PT",
+  "PTH",
+  "RET",
+  "RSE",
+  "RUF",
+  "SIM",
+  "T20",
+  "TC",
+]
+ignore = [
+  "COM812",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+  "S101",
+  "PLR2004",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers"
+testpaths = [
+  "tests",
+]
+markers = [
+  "acceptance: customer-visible acceptance and scenario tests",
+  "integration: service and infrastructure integration tests",
+  "contracts: contract tests for outbound ports and adapters",
+  "e2e: high-value end-to-end smoke tests",
+  "nonfunctional: performance, resilience, and security validation",
+]
+asyncio_mode = "auto"
+
+[tool.mypy]
+python_version = "3.12"
+plugins = []
+warn_unused_configs = true
+warn_return_any = true
+warn_unreachable = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+strict = true
+show_error_codes = true
+pretty = true
+namespace_packages = true
+explicit_package_bases = true
+mypy_path = [
+  "src",
+  "services/broker/src",
+  "services/driver/src",
+  "services/notification/src",
+  "services/payment/src",
+  "services/pricing/src",
+  "services/route/src",
+  "services/tracking/src",
+]
+
+[tool.coverage.run]
+branch = true
+source = [
+  "src/ridenow_shared",
+  "services/broker/src/ridenow_broker",
+  "services/driver/src/ridenow_driver",
+  "services/notification/src/ridenow_notification",
+  "services/payment/src/ridenow_payment",
+  "services/pricing/src/ridenow_pricing",
+  "services/route/src/ridenow_route",
+  "services/tracking/src/ridenow_tracking",
+]
+
+[tool.coverage.report]
+fail_under = 95
+show_missing = true
+skip_covered = false
