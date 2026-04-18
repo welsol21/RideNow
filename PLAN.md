@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `4.1.0`
+- Next unchecked item: `4.1.1`
 
 ## Phase 0 - Bootstrap
 
@@ -68,7 +68,7 @@
 ## Phase 4 - User Stories (outside-in, one at a time)
 
 ### 4.1 Story: request-ride-acknowledgement
-- [ ] 4.1.0 Write docs/state/STORY_request-ride-acknowledgement_START.md
+- [x] 4.1.0 Write docs/state/STORY_request-ride-acknowledgement_START.md
 - [ ] 4.1.1 ACC-RED
 - [ ] 4.1.2 Confirm failure reason
 - [ ] 4.1.3 UNIT-RED
