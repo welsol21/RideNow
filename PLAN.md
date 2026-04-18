@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `4.1.6`
+- Next unchecked item: `4.1.8`
 
 ## Phase 0 - Bootstrap
 
@@ -74,8 +74,8 @@
 - [x] 4.1.3 UNIT-RED
 - [x] 4.1.4 UNIT-GREEN
 - [x] 4.1.5 UNIT-REFACTOR
-- [ ] 4.1.6 Repeat inward TDD until acceptance is green
-- [ ] 4.1.7 ACC-GREEN
+- [x] 4.1.6 Repeat inward TDD until acceptance is green
+- [x] 4.1.7 ACC-GREEN
 - [ ] 4.1.8 Run all prior acceptance tests
 - [ ] 4.1.9 ACC-REFACTOR
 - [ ] 4.1.10 Write docs/state/STORY_request-ride-acknowledgement_DONE.md
