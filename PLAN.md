@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `2A.8`
+- Next unchecked item: `3.1`
 
 ## Phase 0 - Bootstrap
 
@@ -54,7 +54,7 @@
 - [x] 2A.5 UNIT-GREEN - minimum topology wiring to make the first full-system integration test pass
 - [x] 2A.6 REFACTOR
 - [x] 2A.7 PHASE 2A GATE - named operating-mode connectivity established
-- [ ] 2A.8 Write docs/state/PHASE_2A_DONE.md
+- [x] 2A.8 Write docs/state/PHASE_2A_DONE.md
 
 ## Phase 3 - Port Contracts & In-Memory Adapters
 
