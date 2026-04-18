@@ -2,7 +2,6 @@
 
 import pytest
 from fastapi.testclient import TestClient
-
 from ridenow_broker.bootstrap.app import create_app
 
 

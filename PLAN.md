@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `2.8`
+- Next unchecked item: `2.9`
 
 ## Phase 0 - Bootstrap
 
@@ -42,7 +42,7 @@
 - [x] 2.5 UNIT-GREEN - wire composition root
 - [x] 2.6 ACC-GREEN - walking skeleton passes
 - [x] 2.7 REFACTOR
-- [ ] 2.8 PHASE 2 GATE
+- [x] 2.8 PHASE 2 GATE
 - [ ] 2.9 Write docs/state/PHASE_2_DONE.md
 
 ## Phase 2A - Full-System Integration Baseline
