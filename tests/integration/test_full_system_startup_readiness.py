@@ -5,7 +5,6 @@ from importlib import import_module
 import pytest
 from fastapi.testclient import TestClient
 
-
 SERVICE_MODULES = {
     "broker": "ridenow_broker.bootstrap.app",
     "driver": "ridenow_driver.bootstrap.app",
