@@ -40,6 +40,23 @@ You test **outside-in**, not bottom-up. For every user story:
 4. Next story → next acceptance test. Every prior acceptance test
    must remain green throughout.
 
+### 1.1A Mandatory direction of refinement
+
+The refinement direction is always **general â†’ specific**:
+
+1. Start with the highest-level failing scenario that proves the
+   behaviour of the system through a real inbound boundary.
+2. Treat that scenario as the governing test for the entire slice.
+3. Only then derive the **narrowest** unit test for the first missing
+   internal behaviour needed to advance that scenario.
+4. Return immediately to the top-level acceptance test after each
+   unit-green step.
+
+Unit tests are **subordinate instruments** used to localise and remove
+the causes of a failing acceptance test. They are not an independent
+workstream and may not be invented ahead of the scenario that demands
+them.
+
 ### 1.2 Test pyramid you will produce
 
 - **Acceptance tests** — one per user story, written FIRST, exercising
@@ -90,6 +107,14 @@ Never jump ahead.
   story's acceptance test is not green yet.
 - Do **not** refactor across story boundaries without all affected
   acceptance tests green.
+- Do **not** replace a required service-to-service interaction with a
+  Broker-only shortcut, internal HTTP update endpoint, or direct state
+  mutation just because it is faster to make green.
+- Do **not** declare a required RideNow service "implemented" if it
+  exists only as scaffolding, contracts, DTOs, or simulated callbacks
+  without its own production runtime boundary.
+- Do **not** close a phase as complete while a required service or
+  required inter-service flow is still represented only by simulation.
 
 ---
 
@@ -145,6 +170,12 @@ hard-coded.
 a failing test that requires it. No unit test without a failing
 acceptance test upstream that needs it.
 
+**Direction of implementation.** The only valid refinement path is
+top-level acceptance/integration scenario first, then progressively
+smaller unit tests, then back up to the same scenario. Starting from
+bottom-up class design, convenience adapters, or speculative units is
+forbidden.
+
 **Docstrings.** Every public module, class, function, method, port,
 adapter, command, query, and event has a docstring containing:
 purpose · parameters · return value · exceptions raised · one usage
@@ -164,21 +195,21 @@ bodies in delivered code.
 **Acceptance tests are immutable once green.** Only helper structure
 may be refactored; scenario meaning and assertions may not drift.
 
-**Critical assignment constraint.** At least one non-trivial core
-microservice must be developed without GenAI. The human-owned service
-boundary in this project is the **Broker Service**. You must not
-generate the production implementation of the Broker Service.
+**Service implementation constraint.** All RideNow services in this
+project may be implemented by the AI agent as long as the resulting
+architecture, tests, and documentation still satisfy the project goals.
+The Broker Service is no longer reserved as a handwritten-only boundary.
 
-You may generate:
-- the Broker service contract/interface;
-- event contracts involving Broker;
-- placeholder wiring and integration expectations;
-- tests/specifications describing how Broker should behave;
-- documentation for manual implementation.
+**Architecture completeness constraint.** The approved RideNow
+architecture contains seven collaborating services. "Working Broker
+plus simulated downstream behaviour" does **not** satisfy the required
+architecture. Every required service must exist as a real production
+runtime boundary.
 
-You must not generate:
-- final production Broker business logic;
-- hidden Broker logic inside another service.
+**Inter-service verification constraint.** Adapter-level tests and
+single-service smoke tests are insufficient. The delivered system must
+include tests that prove real service-to-service behaviour across the
+event-driven backbone.
 
 ---
 
@@ -190,7 +221,10 @@ Stop and write `docs/state/BLOCKED.md` if:
 - A previously-green acceptance test cannot be restored within 3 attempts
 - A dependency cannot be resolved after 2 alternatives
 - RabbitMQ integration or Kubernetes validation cannot be stabilised after 3 attempts
-- The Broker human-only boundary is at risk of being violated
+- The implementation begins drifting toward a collapsed Broker-centric
+  architecture instead of the approved multi-service topology
+- A required service is being substituted with simulation, shortcut
+  endpoint, or direct Broker mutation rather than a real runtime
 
 Otherwise: keep working.
 
@@ -202,7 +236,7 @@ Otherwise: keep working.
 
 The approved RideNow architecture is:
 
-- **Broker Service** — customer-facing coordination (**human-owned; do not implement production logic**)
+- **Broker Service** — customer-facing coordination
 - **Driver Service**
 - **Route Service**
 - **Pricing Service**
@@ -231,7 +265,7 @@ Write `docs/analysis/reference_analysis.md` containing:
 - event catalogue;
 - routing problem statement (`D -> P`, `P -> Q`, `D -> P -> Q`);
 - timing/configuration rules;
-- handwritten-vs-GenAI service boundary.
+- GenAI implementation scope across services.
 
 Use the following minimum user stories and order them by dependency:
 
@@ -521,9 +555,9 @@ Write `PLAN.md` using this exact skeleton and expand the story sections concrete
 - [ ] 9.10 docs/operations/monitoring.md
 - [ ] 9.11 docs/guides/running_locally.md
 - [ ] 9.12 docs/guides/kubernetes_demo.md
-- [ ] 9.13 docs/guides/manual_broker_service_boundary.md
+- [ ] 9.13 docs/guides/broker_service_implementation.md
 - [ ] 9.14 Docs list required by the assignment:
-      - list of microservices and identify hand-written one
+      - list of microservices and identify the implementation scope of each
       - event-driven architecture overview
       - tests implemented and how to run them
       - monitoring overview
@@ -548,6 +582,7 @@ Write `PLAN.md` using this exact skeleton and expand the story sections concrete
 
 ### 8.1 Required services to implement with GenAI
 Implement production code for:
+- Broker Service
 - Driver Service
 - Route Service
 - Pricing Service
@@ -555,10 +590,17 @@ Implement production code for:
 - Tracking Service
 - Notification Service
 
-### 8.2 Human-owned Broker boundary
+Each service above must exist as a **separate production runtime
+boundary** with its own composition root, adapters, tests, and
+deployable presence in the local and Kubernetes environments. Package
+scaffolding, placeholder modules, or behaviour simulated through
+another service do not satisfy this requirement.
+
+### 8.2 Broker implementation scope
 For Broker Service:
+- implement production business logic;
 - define contracts, tests, ports, DTOs, event expectations, health shape, config shape, and integration boundaries;
-- do not implement final production business logic.
+- keep the same architectural and testing standards as every other service.
 
 ### 8.3 Required infra
 Implement:
@@ -567,6 +609,30 @@ Implement:
 - Kubernetes manifests for all generated services and infrastructure;
 - minimal monitoring solution;
 - test pipeline with functional and non-functional coverage.
+
+The infrastructure must reflect the **real multi-service topology**.
+It is not acceptable to deploy Broker alone while claiming the other
+required services are covered by internal endpoints, stubs, or
+documentation-only boundaries.
+
+The delivered system must have a **centralised stack control surface**:
+- one documented local command or script to start the full RideNow stack;
+- one documented local command or script to stop the full RideNow stack;
+- one documented Kubernetes apply path to bring the full stack up;
+- one documented Kubernetes delete path to bring the full stack down.
+
+Humans must not need to manually start or stop seven services one by
+one. Each service still needs its own composition root, but the system
+as a whole must be operable from a single top-level control entry.
+
+### 8.3A Required verification of service collaboration
+
+For every customer-visible story that depends on more than one service,
+the test strategy must prove the collaboration through the actual
+service boundaries. If a story depends on Driver, Route, Pricing,
+Payment, Tracking, or Notification, the acceptance/integration layer
+must exercise those interactions as real message-driven flows, not as
+Broker-local shortcuts.
 
 ### 8.4 Monitoring minimum
 Provide at least:
@@ -578,10 +644,24 @@ Provide at least:
 
 ### 8.5 Assignment-aligned docs
 Generate documents that help the human satisfy the submission requirements:
-- list of microservices and hand-written service identification;
+- list of microservices and implementation scope;
 - brief explanation of event-driven architecture;
 - tests implemented and how to run them;
 - overview of monitoring solution.
+- short manual demo guide for starting the stack, stopping the stack,
+  seeding dummy/demo data where needed, and hand-driving the main
+  customer-visible flows.
+
+### 8.6 Manual demoability requirement
+
+The final system must be runnable with **dummy/demo data** so a human
+can manually exercise the platform outside automated tests.
+
+This means:
+- provide a documented way to seed or bootstrap demo-ready data;
+- make it possible to manually trigger representative end-to-end flows;
+- ensure the local stack is usable for exploratory testing, not only CI;
+- document the minimum steps to simulate a realistic RideNow session.
 
 ---
 
@@ -619,9 +699,11 @@ When `PLAN.md` has zero unchecked boxes, the human must be able to:
 3. run the tests;
 4. start the local stack;
 5. run or inspect the Kubernetes manifests;
-6. identify which service is hand-written and which are GenAI-generated;
+6. identify which services were implemented in the project and how they interact;
 7. demonstrate at least one full event flow;
-8. read the documentation and understand the system quickly.
+8. manually drive the system with dummy/demo data after startup;
+9. stop the local stack cleanly from the documented top-level control path;
+10. read the documentation and understand the system quickly.
 
 That is "turnkey". Nothing less.
 
