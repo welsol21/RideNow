@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `2A.3`
+- Next unchecked item: `2A.4`
 
 ## Phase 0 - Bootstrap
 
@@ -49,7 +49,7 @@
 
 - [x] 2A.1 ACC-RED - full-system startup and readiness integration matrix
 - [x] 2A.2 ACC-RED - happy-path service-connectivity integration slice
-- [ ] 2A.3 ACC-RED - failure-path service-connectivity integration slice
+- [x] 2A.3 ACC-RED - failure-path service-connectivity integration slice
 - [ ] 2A.4 ACC-RED - manual-demo-mode integration slice
 - [ ] 2A.5 UNIT-GREEN - minimum topology wiring to make the first full-system integration test pass
 - [ ] 2A.6 REFACTOR
