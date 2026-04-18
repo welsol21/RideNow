@@ -1,0 +1,15 @@
+.git
+.github
+.mypy_cache
+.pytest_cache
+.ruff_cache
+.venv
+.venv-docs
+__pycache__
+*.pyc
+*.pyo
+build
+dist
+docs/local
+htmlcov
+site

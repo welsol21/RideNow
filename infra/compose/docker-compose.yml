@@ -1,0 +1,125 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ridenow
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  broker:
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile.service
+      args:
+        SERVICE_MODULE: ridenow_broker.bootstrap.app
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+      RIDENOW_SERVICE_NAME: broker
+      RIDENOW_HTTP_PORT: 8001
+    ports:
+      - "8001:8001"
+
+  driver:
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile.service
+      args:
+        SERVICE_MODULE: ridenow_driver.bootstrap.app
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+      RIDENOW_SERVICE_NAME: driver
+      RIDENOW_HTTP_PORT: 8002
+    ports:
+      - "8002:8002"
+
+  route:
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile.service
+      args:
+        SERVICE_MODULE: ridenow_route.bootstrap.app
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+      RIDENOW_SERVICE_NAME: route
+      RIDENOW_HTTP_PORT: 8003
+    ports:
+      - "8003:8003"
+
+  pricing:
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile.service
+      args:
+        SERVICE_MODULE: ridenow_pricing.bootstrap.app
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+      RIDENOW_SERVICE_NAME: pricing
+      RIDENOW_HTTP_PORT: 8004
+    ports:
+      - "8004:8004"
+
+  payment:
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile.service
+      args:
+        SERVICE_MODULE: ridenow_payment.bootstrap.app
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+      RIDENOW_SERVICE_NAME: payment
+      RIDENOW_HTTP_PORT: 8005
+    ports:
+      - "8005:8005"
+
+  tracking:
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile.service
+      args:
+        SERVICE_MODULE: ridenow_tracking.bootstrap.app
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+      RIDENOW_SERVICE_NAME: tracking
+      RIDENOW_HTTP_PORT: 8006
+    ports:
+      - "8006:8006"
+
+  notification:
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile.service
+      args:
+        SERVICE_MODULE: ridenow_notification.bootstrap.app
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+      RIDENOW_SERVICE_NAME: notification
+      RIDENOW_HTTP_PORT: 8007
+    ports:
+      - "8007:8007"
+
+volumes:
+  postgres_data:
