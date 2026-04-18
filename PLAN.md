@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `2A.1`
+- Next unchecked item: `2A.2`
 
 ## Phase 0 - Bootstrap
 
@@ -47,7 +47,7 @@
 
 ## Phase 2A - Full-System Integration Baseline
 
-- [ ] 2A.1 ACC-RED - full-system startup and readiness integration matrix
+- [x] 2A.1 ACC-RED - full-system startup and readiness integration matrix
 - [ ] 2A.2 ACC-RED - happy-path service-connectivity integration slice
 - [ ] 2A.3 ACC-RED - failure-path service-connectivity integration slice
 - [ ] 2A.4 ACC-RED - manual-demo-mode integration slice
