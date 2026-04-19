@@ -3,5 +3,8 @@
 from ridenow_notification.core.application.relay_driver_search import (
     RelayDriverSearchUseCase,
 )
+from ridenow_notification.core.application.relay_route_request import (
+    RelayRouteRequestUseCase,
+)
 
-__all__ = ["RelayDriverSearchUseCase"]
+__all__ = ["RelayDriverSearchUseCase", "RelayRouteRequestUseCase"]

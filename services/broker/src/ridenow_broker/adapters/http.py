@@ -33,6 +33,14 @@ class DriverPayload(BaseModel):
     vehicle_id: str
 
 
+class RoutePayload(BaseModel):
+    """Customer-visible route and ETA details."""
+
+    distance_km: float
+    pickup_eta_minutes: int
+    trip_duration_minutes: int
+
+
 def create_health_router(use_case: HealthCheckUseCase) -> APIRouter:
     """Create the Broker router containing the health endpoint.
 
@@ -114,6 +122,8 @@ def create_ride_status_router(use_case: GetRideStatusUseCase) -> APIRouter:
         }
         if result.driver is not None:
             response["driver"] = DriverPayload(**result.driver).model_dump()
+        if result.route is not None:
+            response["route"] = RoutePayload(**result.route).model_dump()
         return response
 
     return router

@@ -16,17 +16,22 @@ class AssignDriverUseCase:
         """Publish the driver assignment outcome for the requested ride."""
 
         ride_id = str(event.payload.data["ride_id"])
+        assignment_data: dict[str, object] = {
+            "ride_id": ride_id,
+            "driver_id": "driver-1",
+            "vehicle_id": "vehicle-1",
+        }
+        if "pickup" in event.payload.data:
+            assignment_data["pickup"] = event.payload.data["pickup"]
+        if "dropoff" in event.payload.data:
+            assignment_data["dropoff"] = event.payload.data["dropoff"]
         await self._event_publisher.publish(
             EventEnvelope(
                 correlation_id=event.correlation_id,
                 source="driver",
                 payload=DomainEventPayload(
                     name="DriverAssigned",
-                    data={
-                        "ride_id": ride_id,
-                        "driver_id": "driver-1",
-                        "vehicle_id": "vehicle-1",
-                    },
+                    data=assignment_data,
                 ),
             )
         )

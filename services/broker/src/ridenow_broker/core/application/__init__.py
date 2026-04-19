@@ -13,6 +13,7 @@ from ridenow_broker.core.application.request_ride import (
 from ridenow_broker.core.application.apply_driver_assigned import (
     ApplyDriverAssignedUseCase,
 )
+from ridenow_broker.core.application.apply_eta_updated import ApplyEtaUpdatedUseCase
 from ridenow_broker.core.application.ride_status import (
     GetRideStatusResult,
     GetRideStatusUseCase,
@@ -23,6 +24,7 @@ __all__ = [
     "HealthCheckUseCase",
     "HealthStatus",
     "ApplyDriverAssignedUseCase",
+    "ApplyEtaUpdatedUseCase",
     "GetRideStatusResult",
     "GetRideStatusUseCase",
     "RequestRideCommand",

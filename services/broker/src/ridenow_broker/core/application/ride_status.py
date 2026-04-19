@@ -12,6 +12,7 @@ class GetRideStatusResult:
     ride_id: str
     status: str
     driver: dict[str, object] | None = None
+    route: dict[str, object] | None = None
 
 
 class GetRideStatusUseCase:
@@ -32,4 +33,5 @@ class GetRideStatusUseCase:
             ride_id=ride_id,
             status=str(state["status"]),
             driver=state.get("driver") if isinstance(state.get("driver"), dict) else None,
+            route=state.get("route") if isinstance(state.get("route"), dict) else None,
         )
