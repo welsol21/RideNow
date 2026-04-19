@@ -12,6 +12,9 @@ from ridenow_broker.core.application.apply_driver_assigned import (
     ApplyDriverAssignedUseCase,
 )
 from ridenow_broker.core.application.apply_eta_updated import ApplyEtaUpdatedUseCase
+from ridenow_broker.core.application.apply_no_driver_available import (
+    ApplyNoDriverAvailableUseCase,
+)
 from ridenow_broker.core.application.apply_payment_authorised import (
     ApplyPaymentAuthorisedUseCase,
 )
@@ -34,6 +37,9 @@ from ridenow_notification.core.application.relay_driver_search import (
 )
 from ridenow_notification.core.application.relay_fare_request import (
     RelayFareRequestUseCase,
+)
+from ridenow_notification.core.application.relay_no_driver_available import (
+    RelayNoDriverAvailableUseCase,
 )
 from ridenow_notification.core.application.relay_payment_captured import (
     RelayPaymentCapturedUseCase,
@@ -86,6 +92,9 @@ def create_app() -> FastAPI:
     ride_status_use_case = GetRideStatusUseCase(status_store=status_store)
     notification_relay_use_case = RelayDriverSearchUseCase(event_publisher=event_bus)
     fare_request_relay_use_case = RelayFareRequestUseCase(event_publisher=event_bus)
+    no_driver_available_relay_use_case = RelayNoDriverAvailableUseCase(
+        event_publisher=event_bus
+    )
     payment_authorisation_request_relay_use_case = (
         RelayPaymentAuthorisationRequestUseCase(event_publisher=event_bus)
     )
@@ -110,6 +119,9 @@ def create_app() -> FastAPI:
     derive_trip_status_use_case = DeriveTripStatusUseCase(event_publisher=event_bus)
     apply_driver_assigned_use_case = ApplyDriverAssignedUseCase(status_store=status_store)
     apply_eta_updated_use_case = ApplyEtaUpdatedUseCase(status_store=status_store)
+    apply_no_driver_available_use_case = ApplyNoDriverAvailableUseCase(
+        status_store=status_store
+    )
     apply_payment_authorised_use_case = ApplyPaymentAuthorisedUseCase(
         status_store=status_store
     )
@@ -163,7 +175,16 @@ def create_app() -> FastAPI:
     asyncio.run(
         event_bus.subscribe("DriverSearchRequested", assign_driver_use_case.execute)
     )
+    asyncio.run(
+        event_bus.subscribe("NoDriverAvailable", no_driver_available_relay_use_case.execute)
+    )
     asyncio.run(event_bus.subscribe("DriverAssigned", apply_driver_assigned_use_case.execute))
+    asyncio.run(
+        event_bus.subscribe(
+            "NoDriverAvailableVisible",
+            apply_no_driver_available_use_case.execute,
+        )
+    )
     asyncio.run(event_bus.subscribe("DriverAssigned", schedule_route_request))
     asyncio.run(event_bus.subscribe("RouteRequested", calculate_route_use_case.execute))
     asyncio.run(event_bus.subscribe("EtaUpdated", apply_eta_updated_use_case.execute))

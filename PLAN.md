@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `4.7.0`
+- Next unchecked item: `4.8.0`
 
 ## Phase 0 - Bootstrap
 
@@ -146,17 +146,17 @@
 - [x] 4.6.10 Write docs/state/STORY_ride-completed-payment-confirmed_DONE.md
 
 ### 4.7 Story: no-driver-available
-- [ ] 4.7.0 Write docs/state/STORY_no-driver-available_START.md
-- [ ] 4.7.1 ACC-RED
-- [ ] 4.7.2 Confirm failure reason
-- [ ] 4.7.3 UNIT-RED
-- [ ] 4.7.4 UNIT-GREEN
-- [ ] 4.7.5 UNIT-REFACTOR
-- [ ] 4.7.6 Repeat inward TDD until acceptance is green
-- [ ] 4.7.7 ACC-GREEN
-- [ ] 4.7.8 Run all prior acceptance tests
-- [ ] 4.7.9 ACC-REFACTOR
-- [ ] 4.7.10 Write docs/state/STORY_no-driver-available_DONE.md
+- [x] 4.7.0 Write docs/state/STORY_no-driver-available_START.md
+- [x] 4.7.1 ACC-RED
+- [x] 4.7.2 Confirm failure reason
+- [x] 4.7.3 UNIT-RED
+- [x] 4.7.4 UNIT-GREEN
+- [x] 4.7.5 UNIT-REFACTOR
+- [x] 4.7.6 Repeat inward TDD until acceptance is green
+- [x] 4.7.7 ACC-GREEN
+- [x] 4.7.8 Run all prior acceptance tests
+- [x] 4.7.9 ACC-REFACTOR
+- [x] 4.7.10 Write docs/state/STORY_no-driver-available_DONE.md
 
 ### 4.8 Story: payment-failed
 - [ ] 4.8.0 Write docs/state/STORY_payment-failed_START.md

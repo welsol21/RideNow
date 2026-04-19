@@ -47,3 +47,33 @@ async def test_driver_service_publishes_driver_assigned_event() -> None:
             "vehicle_id": "vehicle-1",
         },
     )
+
+
+async def test_driver_service_can_publish_no_driver_available() -> None:
+    """Verify Driver emits the no-driver outcome for unavailable supply."""
+
+    publisher = RecordingEventPublisher()
+    use_case = AssignDriverUseCase(event_publisher=publisher)
+
+    await use_case.execute(
+        EventEnvelope(
+            correlation_id="ride-1",
+            source="notification",
+            payload=DomainEventPayload(
+                name="DriverSearchRequested",
+                data={
+                    "ride_id": "ride-1",
+                    "customer_id": "customer-no-driver",
+                },
+            ),
+        )
+    )
+
+    assert len(publisher.events) == 1
+    published = publisher.events[0]
+    assert published.correlation_id == "ride-1"
+    assert published.source == "driver"
+    assert published.payload == DomainEventPayload(
+        name="NoDriverAvailable",
+        data={"ride_id": "ride-1"},
+    )

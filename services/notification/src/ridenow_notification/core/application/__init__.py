@@ -6,6 +6,9 @@ from ridenow_notification.core.application.relay_driver_search import (
 from ridenow_notification.core.application.relay_fare_request import (
     RelayFareRequestUseCase,
 )
+from ridenow_notification.core.application.relay_no_driver_available import (
+    RelayNoDriverAvailableUseCase,
+)
 from ridenow_notification.core.application.relay_payment_captured import (
     RelayPaymentCapturedUseCase,
 )
@@ -28,6 +31,7 @@ from ridenow_notification.core.application.relay_route_request import (
 __all__ = [
     "RelayDriverSearchUseCase",
     "RelayFareRequestUseCase",
+    "RelayNoDriverAvailableUseCase",
     "RelayPaymentCapturedUseCase",
     "RelayPaymentAuthorisationRequestUseCase",
     "RelayTrackingLocationUseCase",
