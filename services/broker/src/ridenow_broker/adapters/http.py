@@ -49,6 +49,14 @@ class PaymentPayload(BaseModel):
     currency: str
 
 
+class ProgressPayload(BaseModel):
+    """Customer-visible trip progress details."""
+
+    phase: str
+    driver_lat: float
+    driver_lon: float
+
+
 def create_health_router(use_case: HealthCheckUseCase) -> APIRouter:
     """Create the Broker router containing the health endpoint.
 
@@ -134,6 +142,8 @@ def create_ride_status_router(use_case: GetRideStatusUseCase) -> APIRouter:
             response["route"] = RoutePayload(**result.route).model_dump()
         if result.payment is not None:
             response["payment"] = PaymentPayload(**result.payment).model_dump()
+        if result.progress is not None:
+            response["progress"] = ProgressPayload(**result.progress).model_dump()
         return response
 
     return router

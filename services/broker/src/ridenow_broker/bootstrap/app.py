@@ -15,10 +15,14 @@ from ridenow_broker.core.application.apply_eta_updated import ApplyEtaUpdatedUse
 from ridenow_broker.core.application.apply_payment_authorised import (
     ApplyPaymentAuthorisedUseCase,
 )
+from ridenow_broker.core.application.apply_trip_progress import ApplyTripProgressUseCase
 from ridenow_broker.core.application.health import HealthCheckUseCase
 from ridenow_broker.core.application.request_ride import RequestRideUseCase
 from ridenow_broker.core.application.ride_status import GetRideStatusUseCase
 from ridenow_driver.core.application.assign_driver import AssignDriverUseCase
+from ridenow_driver.core.application.emit_driver_location_update import (
+    EmitDriverLocationUpdateUseCase,
+)
 from ridenow_notification.core.application.relay_driver_search import (
     RelayDriverSearchUseCase,
 )
@@ -28,6 +32,12 @@ from ridenow_notification.core.application.relay_fare_request import (
 from ridenow_notification.core.application.relay_payment_authorisation_request import (
     RelayPaymentAuthorisationRequestUseCase,
 )
+from ridenow_notification.core.application.relay_tracking_location import (
+    RelayTrackingLocationUseCase,
+)
+from ridenow_notification.core.application.relay_trip_status import (
+    RelayTripStatusUseCase,
+)
 from ridenow_notification.core.application.relay_route_request import (
     RelayRouteRequestUseCase,
 )
@@ -35,6 +45,7 @@ from ridenow_payment.core.application.authorise_payment import AuthorisePaymentU
 from ridenow_pricing.core.application.calculate_fare import CalculateFareUseCase
 from ridenow_route.core.application.calculate_route import CalculateRouteUseCase
 from ridenow_shared.adapters.in_memory import InMemoryEventBus, InMemoryStateStore
+from ridenow_tracking.core.application.derive_trip_status import DeriveTripStatusUseCase
 
 
 def create_app() -> FastAPI:
@@ -64,16 +75,25 @@ def create_app() -> FastAPI:
     payment_authorisation_request_relay_use_case = (
         RelayPaymentAuthorisationRequestUseCase(event_publisher=event_bus)
     )
+    tracking_location_relay_use_case = RelayTrackingLocationUseCase(
+        event_publisher=event_bus
+    )
+    trip_status_relay_use_case = RelayTripStatusUseCase(event_publisher=event_bus)
     route_request_relay_use_case = RelayRouteRequestUseCase(event_publisher=event_bus)
     assign_driver_use_case = AssignDriverUseCase(event_publisher=event_bus)
+    emit_driver_location_update_use_case = EmitDriverLocationUpdateUseCase(
+        event_publisher=event_bus
+    )
     calculate_fare_use_case = CalculateFareUseCase(event_publisher=event_bus)
     authorise_payment_use_case = AuthorisePaymentUseCase(event_publisher=event_bus)
     calculate_route_use_case = CalculateRouteUseCase(event_publisher=event_bus)
+    derive_trip_status_use_case = DeriveTripStatusUseCase(event_publisher=event_bus)
     apply_driver_assigned_use_case = ApplyDriverAssignedUseCase(status_store=status_store)
     apply_eta_updated_use_case = ApplyEtaUpdatedUseCase(status_store=status_store)
     apply_payment_authorised_use_case = ApplyPaymentAuthorisedUseCase(
         status_store=status_store
     )
+    apply_trip_progress_use_case = ApplyTripProgressUseCase(status_store=status_store)
 
     async def schedule_route_request(event) -> None:
         """Delay route processing so driver assignment remains the first visible state."""
@@ -89,6 +109,14 @@ def create_app() -> FastAPI:
         Timer(
             0.1,
             lambda: asyncio.run(fare_request_relay_use_case.execute(event)),
+        ).start()
+
+    async def schedule_driver_location_update(event) -> None:
+        """Delay live-progress updates so payment authorisation remains visible first."""
+
+        Timer(
+            0.1,
+            lambda: asyncio.run(emit_driver_location_update_use_case.execute(event)),
         ).start()
 
     asyncio.run(event_bus.subscribe("RideRequested", notification_relay_use_case.execute))
@@ -115,6 +143,17 @@ def create_app() -> FastAPI:
     )
     asyncio.run(
         event_bus.subscribe("PaymentAuthorised", apply_payment_authorised_use_case.execute)
+    )
+    asyncio.run(event_bus.subscribe("PaymentAuthorised", schedule_driver_location_update))
+    asyncio.run(
+        event_bus.subscribe("DriverLocationUpdated", tracking_location_relay_use_case.execute)
+    )
+    asyncio.run(
+        event_bus.subscribe("TrackingLocationUpdated", derive_trip_status_use_case.execute)
+    )
+    asyncio.run(event_bus.subscribe("TripStatusUpdated", trip_status_relay_use_case.execute))
+    asyncio.run(
+        event_bus.subscribe("TripProgressVisible", apply_trip_progress_use_case.execute)
     )
 
     app.include_router(create_health_router(health_use_case))
