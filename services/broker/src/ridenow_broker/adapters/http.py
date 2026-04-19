@@ -45,8 +45,10 @@ class PaymentPayload(BaseModel):
     """Customer-visible payment authorisation details."""
 
     authorisation_id: str
+    capture_id: str | None = None
     amount: float
     currency: str
+    status: str | None = None
 
 
 class ProgressPayload(BaseModel):
@@ -141,7 +143,9 @@ def create_ride_status_router(use_case: GetRideStatusUseCase) -> APIRouter:
         if result.route is not None:
             response["route"] = RoutePayload(**result.route).model_dump()
         if result.payment is not None:
-            response["payment"] = PaymentPayload(**result.payment).model_dump()
+            response["payment"] = PaymentPayload(**result.payment).model_dump(
+                exclude_none=True
+            )
         if result.progress is not None:
             response["progress"] = ProgressPayload(**result.progress).model_dump()
         return response

@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `4.6.0`
+- Next unchecked item: `4.7.0`
 
 ## Phase 0 - Bootstrap
 
@@ -133,17 +133,17 @@
 - [x] 4.5.10 Write docs/state/STORY_trip-progress_DONE.md
 
 ### 4.6 Story: ride-completed-payment-confirmed
-- [ ] 4.6.0 Write docs/state/STORY_ride-completed-payment-confirmed_START.md
-- [ ] 4.6.1 ACC-RED
-- [ ] 4.6.2 Confirm failure reason
-- [ ] 4.6.3 UNIT-RED
-- [ ] 4.6.4 UNIT-GREEN
-- [ ] 4.6.5 UNIT-REFACTOR
-- [ ] 4.6.6 Repeat inward TDD until acceptance is green
-- [ ] 4.6.7 ACC-GREEN
-- [ ] 4.6.8 Run all prior acceptance tests
-- [ ] 4.6.9 ACC-REFACTOR
-- [ ] 4.6.10 Write docs/state/STORY_ride-completed-payment-confirmed_DONE.md
+- [x] 4.6.0 Write docs/state/STORY_ride-completed-payment-confirmed_START.md
+- [x] 4.6.1 ACC-RED
+- [x] 4.6.2 Confirm failure reason
+- [x] 4.6.3 UNIT-RED
+- [x] 4.6.4 UNIT-GREEN
+- [x] 4.6.5 UNIT-REFACTOR
+- [x] 4.6.6 Repeat inward TDD until acceptance is green
+- [x] 4.6.7 ACC-GREEN
+- [x] 4.6.8 Run all prior acceptance tests
+- [x] 4.6.9 ACC-REFACTOR
+- [x] 4.6.10 Write docs/state/STORY_ride-completed-payment-confirmed_DONE.md
 
 ### 4.7 Story: no-driver-available
 - [ ] 4.7.0 Write docs/state/STORY_no-driver-available_START.md

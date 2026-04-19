@@ -15,6 +15,12 @@ from ridenow_broker.core.application.apply_eta_updated import ApplyEtaUpdatedUse
 from ridenow_broker.core.application.apply_payment_authorised import (
     ApplyPaymentAuthorisedUseCase,
 )
+from ridenow_broker.core.application.apply_payment_confirmed import (
+    ApplyPaymentConfirmedUseCase,
+)
+from ridenow_broker.core.application.apply_ride_completed import (
+    ApplyRideCompletedUseCase,
+)
 from ridenow_broker.core.application.apply_trip_progress import ApplyTripProgressUseCase
 from ridenow_broker.core.application.health import HealthCheckUseCase
 from ridenow_broker.core.application.request_ride import RequestRideUseCase
@@ -29,11 +35,17 @@ from ridenow_notification.core.application.relay_driver_search import (
 from ridenow_notification.core.application.relay_fare_request import (
     RelayFareRequestUseCase,
 )
+from ridenow_notification.core.application.relay_payment_captured import (
+    RelayPaymentCapturedUseCase,
+)
 from ridenow_notification.core.application.relay_payment_authorisation_request import (
     RelayPaymentAuthorisationRequestUseCase,
 )
 from ridenow_notification.core.application.relay_tracking_location import (
     RelayTrackingLocationUseCase,
+)
+from ridenow_notification.core.application.relay_trip_completed import (
+    RelayTripCompletedUseCase,
 )
 from ridenow_notification.core.application.relay_trip_status import (
     RelayTripStatusUseCase,
@@ -42,10 +54,12 @@ from ridenow_notification.core.application.relay_route_request import (
     RelayRouteRequestUseCase,
 )
 from ridenow_payment.core.application.authorise_payment import AuthorisePaymentUseCase
+from ridenow_payment.core.application.capture_payment import CapturePaymentUseCase
 from ridenow_pricing.core.application.calculate_fare import CalculateFareUseCase
 from ridenow_route.core.application.calculate_route import CalculateRouteUseCase
 from ridenow_shared.adapters.in_memory import InMemoryEventBus, InMemoryStateStore
 from ridenow_tracking.core.application.derive_trip_status import DeriveTripStatusUseCase
+from ridenow_tracking.core.application.complete_trip import CompleteTripUseCase
 
 
 def create_app() -> FastAPI:
@@ -75,9 +89,13 @@ def create_app() -> FastAPI:
     payment_authorisation_request_relay_use_case = (
         RelayPaymentAuthorisationRequestUseCase(event_publisher=event_bus)
     )
+    payment_captured_relay_use_case = RelayPaymentCapturedUseCase(
+        event_publisher=event_bus
+    )
     tracking_location_relay_use_case = RelayTrackingLocationUseCase(
         event_publisher=event_bus
     )
+    trip_completed_relay_use_case = RelayTripCompletedUseCase(event_publisher=event_bus)
     trip_status_relay_use_case = RelayTripStatusUseCase(event_publisher=event_bus)
     route_request_relay_use_case = RelayRouteRequestUseCase(event_publisher=event_bus)
     assign_driver_use_case = AssignDriverUseCase(event_publisher=event_bus)
@@ -86,13 +104,19 @@ def create_app() -> FastAPI:
     )
     calculate_fare_use_case = CalculateFareUseCase(event_publisher=event_bus)
     authorise_payment_use_case = AuthorisePaymentUseCase(event_publisher=event_bus)
+    capture_payment_use_case = CapturePaymentUseCase(event_publisher=event_bus)
     calculate_route_use_case = CalculateRouteUseCase(event_publisher=event_bus)
+    complete_trip_use_case = CompleteTripUseCase(event_publisher=event_bus)
     derive_trip_status_use_case = DeriveTripStatusUseCase(event_publisher=event_bus)
     apply_driver_assigned_use_case = ApplyDriverAssignedUseCase(status_store=status_store)
     apply_eta_updated_use_case = ApplyEtaUpdatedUseCase(status_store=status_store)
     apply_payment_authorised_use_case = ApplyPaymentAuthorisedUseCase(
         status_store=status_store
     )
+    apply_payment_confirmed_use_case = ApplyPaymentConfirmedUseCase(
+        status_store=status_store
+    )
+    apply_ride_completed_use_case = ApplyRideCompletedUseCase(status_store=status_store)
     apply_trip_progress_use_case = ApplyTripProgressUseCase(status_store=status_store)
 
     async def schedule_route_request(event) -> None:
@@ -117,6 +141,22 @@ def create_app() -> FastAPI:
         Timer(
             0.1,
             lambda: asyncio.run(emit_driver_location_update_use_case.execute(event)),
+        ).start()
+
+    async def schedule_trip_completed(event) -> None:
+        """Delay trip completion so trip progress remains visible first."""
+
+        Timer(
+            0.1,
+            lambda: asyncio.run(complete_trip_use_case.execute(event)),
+        ).start()
+
+    async def schedule_payment_capture(event) -> None:
+        """Delay payment capture so ride completion remains visible first."""
+
+        Timer(
+            0.1,
+            lambda: asyncio.run(capture_payment_use_case.execute(event)),
         ).start()
 
     asyncio.run(event_bus.subscribe("RideRequested", notification_relay_use_case.execute))
@@ -151,9 +191,22 @@ def create_app() -> FastAPI:
     asyncio.run(
         event_bus.subscribe("TrackingLocationUpdated", derive_trip_status_use_case.execute)
     )
+    asyncio.run(event_bus.subscribe("TrackingLocationUpdated", schedule_trip_completed))
     asyncio.run(event_bus.subscribe("TripStatusUpdated", trip_status_relay_use_case.execute))
     asyncio.run(
         event_bus.subscribe("TripProgressVisible", apply_trip_progress_use_case.execute)
+    )
+    asyncio.run(event_bus.subscribe("TripCompleted", trip_completed_relay_use_case.execute))
+    asyncio.run(
+        event_bus.subscribe("RideCompletedVisible", apply_ride_completed_use_case.execute)
+    )
+    asyncio.run(event_bus.subscribe("PaymentCaptureRequested", schedule_payment_capture))
+    asyncio.run(event_bus.subscribe("PaymentCaptured", payment_captured_relay_use_case.execute))
+    asyncio.run(
+        event_bus.subscribe(
+            "PaymentConfirmedVisible",
+            apply_payment_confirmed_use_case.execute,
+        )
     )
 
     app.include_router(create_health_router(health_use_case))
