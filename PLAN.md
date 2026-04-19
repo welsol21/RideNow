@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `5.1`
+- Next unchecked item: `6.1`
 
 ## Phase 0 - Bootstrap
 
@@ -190,10 +190,10 @@
 
 ## Phase 5 - Inbound Adapter Diversity
 
-- [ ] 5.1 ACC-RED - representative acceptance subset through CLI or alternative inbound adapter
-- [ ] 5.2 UNIT-GREEN - implement second inbound adapter
-- [ ] 5.3 ACC-GREEN
-- [ ] 5.4 Write docs/state/PHASE_5_DONE.md
+- [x] 5.1 ACC-RED - representative acceptance subset through CLI or alternative inbound adapter
+- [x] 5.2 UNIT-GREEN - implement second inbound adapter
+- [x] 5.3 ACC-GREEN
+- [x] 5.4 Write docs/state/PHASE_5_DONE.md
 
 ## Phase 6 - Real Outbound Adapters
 

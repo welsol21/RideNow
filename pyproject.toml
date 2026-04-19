@@ -43,6 +43,9 @@ nonfunctional = [
   "pip-audit==2.9.0",
 ]
 
+[project.scripts]
+ridenow-broker = "ridenow_broker.adapters.cli:main"
+
 [tool.setuptools]
 include-package-data = true
 
