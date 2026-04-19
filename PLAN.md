@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `4.4.0`
+- Next unchecked item: `4.5.0`
 
 ## Phase 0 - Bootstrap
 
@@ -107,17 +107,17 @@
 - [x] 4.3.10 Write docs/state/STORY_route-and-eta-feedback_DONE.md
 
 ### 4.4 Story: payment-authorised
-- [ ] 4.4.0 Write docs/state/STORY_payment-authorised_START.md
-- [ ] 4.4.1 ACC-RED
-- [ ] 4.4.2 Confirm failure reason
-- [ ] 4.4.3 UNIT-RED
-- [ ] 4.4.4 UNIT-GREEN
-- [ ] 4.4.5 UNIT-REFACTOR
-- [ ] 4.4.6 Repeat inward TDD until acceptance is green
-- [ ] 4.4.7 ACC-GREEN
-- [ ] 4.4.8 Run all prior acceptance tests
-- [ ] 4.4.9 ACC-REFACTOR
-- [ ] 4.4.10 Write docs/state/STORY_payment-authorised_DONE.md
+- [x] 4.4.0 Write docs/state/STORY_payment-authorised_START.md
+- [x] 4.4.1 ACC-RED
+- [x] 4.4.2 Confirm failure reason
+- [x] 4.4.3 UNIT-RED
+- [x] 4.4.4 UNIT-GREEN
+- [x] 4.4.5 UNIT-REFACTOR
+- [x] 4.4.6 Repeat inward TDD until acceptance is green
+- [x] 4.4.7 ACC-GREEN
+- [x] 4.4.8 Run all prior acceptance tests
+- [x] 4.4.9 ACC-REFACTOR
+- [x] 4.4.10 Write docs/state/STORY_payment-authorised_DONE.md
 
 ### 4.5 Story: trip-progress
 - [ ] 4.5.0 Write docs/state/STORY_trip-progress_START.md

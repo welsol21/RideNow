@@ -14,6 +14,9 @@ from ridenow_broker.core.application.apply_driver_assigned import (
     ApplyDriverAssignedUseCase,
 )
 from ridenow_broker.core.application.apply_eta_updated import ApplyEtaUpdatedUseCase
+from ridenow_broker.core.application.apply_payment_authorised import (
+    ApplyPaymentAuthorisedUseCase,
+)
 from ridenow_broker.core.application.ride_status import (
     GetRideStatusResult,
     GetRideStatusUseCase,
@@ -25,6 +28,7 @@ __all__ = [
     "HealthStatus",
     "ApplyDriverAssignedUseCase",
     "ApplyEtaUpdatedUseCase",
+    "ApplyPaymentAuthorisedUseCase",
     "GetRideStatusResult",
     "GetRideStatusUseCase",
     "RequestRideCommand",

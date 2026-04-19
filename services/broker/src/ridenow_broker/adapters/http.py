@@ -41,6 +41,14 @@ class RoutePayload(BaseModel):
     trip_duration_minutes: int
 
 
+class PaymentPayload(BaseModel):
+    """Customer-visible payment authorisation details."""
+
+    authorisation_id: str
+    amount: float
+    currency: str
+
+
 def create_health_router(use_case: HealthCheckUseCase) -> APIRouter:
     """Create the Broker router containing the health endpoint.
 
@@ -124,6 +132,8 @@ def create_ride_status_router(use_case: GetRideStatusUseCase) -> APIRouter:
             response["driver"] = DriverPayload(**result.driver).model_dump()
         if result.route is not None:
             response["route"] = RoutePayload(**result.route).model_dump()
+        if result.payment is not None:
+            response["payment"] = PaymentPayload(**result.payment).model_dump()
         return response
 
     return router

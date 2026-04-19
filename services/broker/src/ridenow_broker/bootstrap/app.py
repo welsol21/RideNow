@@ -12,6 +12,9 @@ from ridenow_broker.core.application.apply_driver_assigned import (
     ApplyDriverAssignedUseCase,
 )
 from ridenow_broker.core.application.apply_eta_updated import ApplyEtaUpdatedUseCase
+from ridenow_broker.core.application.apply_payment_authorised import (
+    ApplyPaymentAuthorisedUseCase,
+)
 from ridenow_broker.core.application.health import HealthCheckUseCase
 from ridenow_broker.core.application.request_ride import RequestRideUseCase
 from ridenow_broker.core.application.ride_status import GetRideStatusUseCase
@@ -19,9 +22,17 @@ from ridenow_driver.core.application.assign_driver import AssignDriverUseCase
 from ridenow_notification.core.application.relay_driver_search import (
     RelayDriverSearchUseCase,
 )
+from ridenow_notification.core.application.relay_fare_request import (
+    RelayFareRequestUseCase,
+)
+from ridenow_notification.core.application.relay_payment_authorisation_request import (
+    RelayPaymentAuthorisationRequestUseCase,
+)
 from ridenow_notification.core.application.relay_route_request import (
     RelayRouteRequestUseCase,
 )
+from ridenow_payment.core.application.authorise_payment import AuthorisePaymentUseCase
+from ridenow_pricing.core.application.calculate_fare import CalculateFareUseCase
 from ridenow_route.core.application.calculate_route import CalculateRouteUseCase
 from ridenow_shared.adapters.in_memory import InMemoryEventBus, InMemoryStateStore
 
@@ -49,11 +60,20 @@ def create_app() -> FastAPI:
     )
     ride_status_use_case = GetRideStatusUseCase(status_store=status_store)
     notification_relay_use_case = RelayDriverSearchUseCase(event_publisher=event_bus)
+    fare_request_relay_use_case = RelayFareRequestUseCase(event_publisher=event_bus)
+    payment_authorisation_request_relay_use_case = (
+        RelayPaymentAuthorisationRequestUseCase(event_publisher=event_bus)
+    )
     route_request_relay_use_case = RelayRouteRequestUseCase(event_publisher=event_bus)
     assign_driver_use_case = AssignDriverUseCase(event_publisher=event_bus)
+    calculate_fare_use_case = CalculateFareUseCase(event_publisher=event_bus)
+    authorise_payment_use_case = AuthorisePaymentUseCase(event_publisher=event_bus)
     calculate_route_use_case = CalculateRouteUseCase(event_publisher=event_bus)
     apply_driver_assigned_use_case = ApplyDriverAssignedUseCase(status_store=status_store)
     apply_eta_updated_use_case = ApplyEtaUpdatedUseCase(status_store=status_store)
+    apply_payment_authorised_use_case = ApplyPaymentAuthorisedUseCase(
+        status_store=status_store
+    )
 
     async def schedule_route_request(event) -> None:
         """Delay route processing so driver assignment remains the first visible state."""
@@ -61,6 +81,14 @@ def create_app() -> FastAPI:
         Timer(
             0.1,
             lambda: asyncio.run(route_request_relay_use_case.execute(event)),
+        ).start()
+
+    async def schedule_fare_request(event) -> None:
+        """Delay fare processing so ETA feedback remains visible first."""
+
+        Timer(
+            0.1,
+            lambda: asyncio.run(fare_request_relay_use_case.execute(event)),
         ).start()
 
     asyncio.run(event_bus.subscribe("RideRequested", notification_relay_use_case.execute))
@@ -71,6 +99,23 @@ def create_app() -> FastAPI:
     asyncio.run(event_bus.subscribe("DriverAssigned", schedule_route_request))
     asyncio.run(event_bus.subscribe("RouteRequested", calculate_route_use_case.execute))
     asyncio.run(event_bus.subscribe("EtaUpdated", apply_eta_updated_use_case.execute))
+    asyncio.run(event_bus.subscribe("EtaUpdated", schedule_fare_request))
+    asyncio.run(event_bus.subscribe("FareRequested", calculate_fare_use_case.execute))
+    asyncio.run(
+        event_bus.subscribe(
+            "FareEstimated",
+            payment_authorisation_request_relay_use_case.execute,
+        )
+    )
+    asyncio.run(
+        event_bus.subscribe(
+            "PaymentAuthorisationRequested",
+            authorise_payment_use_case.execute,
+        )
+    )
+    asyncio.run(
+        event_bus.subscribe("PaymentAuthorised", apply_payment_authorised_use_case.execute)
+    )
 
     app.include_router(create_health_router(health_use_case))
     app.include_router(create_request_ride_router(request_ride_use_case))
