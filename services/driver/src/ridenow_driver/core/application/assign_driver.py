@@ -37,6 +37,8 @@ class AssignDriverUseCase:
             assignment_data["pickup"] = event.payload.data["pickup"]
         if "dropoff" in event.payload.data:
             assignment_data["dropoff"] = event.payload.data["dropoff"]
+        if "customer_id" in event.payload.data:
+            assignment_data["customer_id"] = event.payload.data["customer_id"]
         await self._event_publisher.publish(
             EventEnvelope(
                 correlation_id=event.correlation_id,

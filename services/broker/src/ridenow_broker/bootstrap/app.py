@@ -15,6 +15,9 @@ from ridenow_broker.core.application.apply_eta_updated import ApplyEtaUpdatedUse
 from ridenow_broker.core.application.apply_no_driver_available import (
     ApplyNoDriverAvailableUseCase,
 )
+from ridenow_broker.core.application.apply_payment_failed import (
+    ApplyPaymentFailedUseCase,
+)
 from ridenow_broker.core.application.apply_payment_authorised import (
     ApplyPaymentAuthorisedUseCase,
 )
@@ -40,6 +43,9 @@ from ridenow_notification.core.application.relay_fare_request import (
 )
 from ridenow_notification.core.application.relay_no_driver_available import (
     RelayNoDriverAvailableUseCase,
+)
+from ridenow_notification.core.application.relay_payment_failed import (
+    RelayPaymentFailedUseCase,
 )
 from ridenow_notification.core.application.relay_payment_captured import (
     RelayPaymentCapturedUseCase,
@@ -95,6 +101,7 @@ def create_app() -> FastAPI:
     no_driver_available_relay_use_case = RelayNoDriverAvailableUseCase(
         event_publisher=event_bus
     )
+    payment_failed_relay_use_case = RelayPaymentFailedUseCase(event_publisher=event_bus)
     payment_authorisation_request_relay_use_case = (
         RelayPaymentAuthorisationRequestUseCase(event_publisher=event_bus)
     )
@@ -122,6 +129,7 @@ def create_app() -> FastAPI:
     apply_no_driver_available_use_case = ApplyNoDriverAvailableUseCase(
         status_store=status_store
     )
+    apply_payment_failed_use_case = ApplyPaymentFailedUseCase(status_store=status_store)
     apply_payment_authorised_use_case = ApplyPaymentAuthorisedUseCase(
         status_store=status_store
     )
@@ -202,8 +210,12 @@ def create_app() -> FastAPI:
             authorise_payment_use_case.execute,
         )
     )
+    asyncio.run(event_bus.subscribe("PaymentFailed", payment_failed_relay_use_case.execute))
     asyncio.run(
         event_bus.subscribe("PaymentAuthorised", apply_payment_authorised_use_case.execute)
+    )
+    asyncio.run(
+        event_bus.subscribe("PaymentFailedVisible", apply_payment_failed_use_case.execute)
     )
     asyncio.run(event_bus.subscribe("PaymentAuthorised", schedule_driver_location_update))
     asyncio.run(

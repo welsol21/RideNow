@@ -52,3 +52,35 @@ async def test_payment_service_publishes_payment_authorised() -> None:
             "currency": "EUR",
         },
     )
+
+
+async def test_payment_service_can_publish_payment_failed() -> None:
+    """Verify Payment emits the payment-failed outcome for deterministic failure input."""
+
+    publisher = RecordingEventPublisher()
+    use_case = AuthorisePaymentUseCase(event_publisher=publisher)
+
+    await use_case.execute(
+        EventEnvelope(
+            correlation_id="ride-1",
+            source="notification",
+            payload=DomainEventPayload(
+                name="PaymentAuthorisationRequested",
+                data={
+                    "ride_id": "ride-1",
+                    "amount": 18.5,
+                    "currency": "EUR",
+                    "customer_id": "customer-payment-fail",
+                },
+            ),
+        )
+    )
+
+    assert len(publisher.events) == 1
+    published = publisher.events[0]
+    assert published.correlation_id == "ride-1"
+    assert published.source == "payment"
+    assert published.payload == DomainEventPayload(
+        name="PaymentFailed",
+        data={"ride_id": "ride-1"},
+    )

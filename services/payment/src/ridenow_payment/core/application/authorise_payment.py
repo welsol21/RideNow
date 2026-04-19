@@ -16,6 +16,18 @@ class AuthorisePaymentUseCase:
         """Publish deterministic payment authorisation for the requested ride."""
 
         ride_id = str(event.payload.data["ride_id"])
+        if event.payload.data.get("customer_id") == "customer-payment-fail":
+            await self._event_publisher.publish(
+                EventEnvelope(
+                    correlation_id=event.correlation_id,
+                    source="payment",
+                    payload=DomainEventPayload(
+                        name="PaymentFailed",
+                        data={"ride_id": ride_id},
+                    ),
+                )
+            )
+            return
         await self._event_publisher.publish(
             EventEnvelope(
                 correlation_id=event.correlation_id,

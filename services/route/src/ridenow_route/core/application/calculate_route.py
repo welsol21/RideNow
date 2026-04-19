@@ -16,18 +16,21 @@ class CalculateRouteUseCase:
         """Publish deterministic route and ETA feedback for the requested ride."""
 
         ride_id = str(event.payload.data["ride_id"])
+        route_data: dict[str, object] = {
+            "ride_id": ride_id,
+            "distance_km": 4.8,
+            "pickup_eta_minutes": 3,
+            "trip_duration_minutes": 11,
+        }
+        if "customer_id" in event.payload.data:
+            route_data["customer_id"] = event.payload.data["customer_id"]
         await self._event_publisher.publish(
             EventEnvelope(
                 correlation_id=event.correlation_id,
                 source="route",
                 payload=DomainEventPayload(
                     name="EtaUpdated",
-                    data={
-                        "ride_id": ride_id,
-                        "distance_km": 4.8,
-                        "pickup_eta_minutes": 3,
-                        "trip_duration_minutes": 11,
-                    },
+                    data=route_data,
                 ),
             )
         )

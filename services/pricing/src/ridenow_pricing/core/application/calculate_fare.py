@@ -16,17 +16,20 @@ class CalculateFareUseCase:
         """Publish deterministic fare feedback for the requested ride."""
 
         ride_id = str(event.payload.data["ride_id"])
+        fare_data: dict[str, object] = {
+            "ride_id": ride_id,
+            "amount": 18.5,
+            "currency": "EUR",
+        }
+        if "customer_id" in event.payload.data:
+            fare_data["customer_id"] = event.payload.data["customer_id"]
         await self._event_publisher.publish(
             EventEnvelope(
                 correlation_id=event.correlation_id,
                 source="pricing",
                 payload=DomainEventPayload(
                     name="FareEstimated",
-                    data={
-                        "ride_id": ride_id,
-                        "amount": 18.5,
-                        "currency": "EUR",
-                    },
+                    data=fare_data,
                 ),
             )
         )
