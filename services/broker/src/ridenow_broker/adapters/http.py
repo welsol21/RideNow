@@ -1,6 +1,6 @@
 """HTTP adapter for Broker health and ride-request endpoints."""
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from ridenow_broker.core.application.health import HealthCheckUseCase
@@ -8,6 +8,7 @@ from ridenow_broker.core.application.request_ride import (
     RequestRideCommand,
     RequestRideUseCase,
 )
+from ridenow_broker.core.application.ride_status import GetRideStatusUseCase
 
 
 class CoordinatePayload(BaseModel):
@@ -23,6 +24,13 @@ class RequestRidePayload(BaseModel):
     customer_id: str
     pickup: CoordinatePayload
     dropoff: CoordinatePayload
+
+
+class DriverPayload(BaseModel):
+    """Customer-visible driver details."""
+
+    driver_id: str
+    vehicle_id: str
 
 
 def create_health_router(use_case: HealthCheckUseCase) -> APIRouter:
@@ -83,5 +91,29 @@ def create_request_ride_router(use_case: RequestRideUseCase) -> APIRouter:
             "ride_id": result.ride_id,
             "status": result.status,
         }
+
+    return router
+
+
+def create_ride_status_router(use_case: GetRideStatusUseCase) -> APIRouter:
+    """Create the Broker router containing the customer-visible ride read endpoint."""
+
+    router = APIRouter()
+
+    @router.get("/rides/{ride_id}")
+    async def get_ride_status(ride_id: str) -> dict[str, object]:
+        """Return customer-visible ride state for the given ride identifier."""
+
+        result = await use_case.execute(ride_id)
+        if result is None:
+            raise HTTPException(status_code=404, detail="Ride not found")
+
+        response: dict[str, object] = {
+            "ride_id": result.ride_id,
+            "status": result.status,
+        }
+        if result.driver is not None:
+            response["driver"] = DriverPayload(**result.driver).model_dump()
+        return response
 
     return router

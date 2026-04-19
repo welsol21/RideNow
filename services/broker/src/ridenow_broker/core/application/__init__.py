@@ -10,11 +10,21 @@ from ridenow_broker.core.application.request_ride import (
     RequestRideResult,
     RequestRideUseCase,
 )
+from ridenow_broker.core.application.apply_driver_assigned import (
+    ApplyDriverAssignedUseCase,
+)
+from ridenow_broker.core.application.ride_status import (
+    GetRideStatusResult,
+    GetRideStatusUseCase,
+)
 
 __all__ = [
     "HealthCheckPort",
     "HealthCheckUseCase",
     "HealthStatus",
+    "ApplyDriverAssignedUseCase",
+    "GetRideStatusResult",
+    "GetRideStatusUseCase",
     "RequestRideCommand",
     "RequestRideResult",
     "RequestRideUseCase",
