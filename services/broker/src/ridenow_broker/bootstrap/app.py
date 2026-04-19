@@ -7,7 +7,11 @@ from fastapi import FastAPI
 
 from ridenow_broker.adapters.http import create_request_ride_router
 from ridenow_broker.adapters.health import StaticHealthCheckAdapter
-from ridenow_broker.adapters.http import create_health_router, create_ride_status_router
+from ridenow_broker.adapters.http import (
+    create_health_router,
+    create_issue_submission_router,
+    create_ride_status_router,
+)
 from ridenow_broker.core.application.apply_driver_assigned import (
     ApplyDriverAssignedUseCase,
 )
@@ -29,6 +33,7 @@ from ridenow_broker.core.application.apply_ride_completed import (
 )
 from ridenow_broker.core.application.apply_trip_progress import ApplyTripProgressUseCase
 from ridenow_broker.core.application.health import HealthCheckUseCase
+from ridenow_broker.core.application.issue_submission import IssueSubmissionUseCase
 from ridenow_broker.core.application.request_ride import RequestRideUseCase
 from ridenow_broker.core.application.ride_status import GetRideStatusUseCase
 from ridenow_driver.core.application.assign_driver import AssignDriverUseCase
@@ -91,8 +96,13 @@ def create_app() -> FastAPI:
     health_use_case = HealthCheckUseCase(StaticHealthCheckAdapter(service_name="broker"))
     status_store = InMemoryStateStore[dict[str, object]]()
     event_bus = InMemoryEventBus()
+    issue_store = InMemoryStateStore[dict[str, object]]()
     request_ride_use_case = RequestRideUseCase(
         status_store=status_store,
+        event_publisher=event_bus,
+    )
+    issue_submission_use_case = IssueSubmissionUseCase(
+        issue_store=issue_store,
         event_publisher=event_bus,
     )
     ride_status_use_case = GetRideStatusUseCase(status_store=status_store)
@@ -244,5 +254,6 @@ def create_app() -> FastAPI:
 
     app.include_router(create_health_router(health_use_case))
     app.include_router(create_request_ride_router(request_ride_use_case))
+    app.include_router(create_issue_submission_router(issue_submission_use_case))
     app.include_router(create_ride_status_router(ride_status_use_case))
     return app

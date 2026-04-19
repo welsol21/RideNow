@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `4.9.0`
+- Next unchecked item: `5.1`
 
 ## Phase 0 - Bootstrap
 
@@ -172,21 +172,21 @@
 - [x] 4.8.10 Write docs/state/STORY_payment-failed_DONE.md
 
 ### 4.9 Story: issue-submitted
-- [ ] 4.9.0 Write docs/state/STORY_issue-submitted_START.md
-- [ ] 4.9.1 ACC-RED
-- [ ] 4.9.2 Confirm failure reason
-- [ ] 4.9.3 UNIT-RED
-- [ ] 4.9.4 UNIT-GREEN
-- [ ] 4.9.5 UNIT-REFACTOR
-- [ ] 4.9.6 Repeat inward TDD until acceptance is green
-- [ ] 4.9.7 ACC-GREEN
-- [ ] 4.9.8 Run all prior acceptance tests
-- [ ] 4.9.9 ACC-REFACTOR
-- [ ] 4.9.10 Write docs/state/STORY_issue-submitted_DONE.md
+- [x] 4.9.0 Write docs/state/STORY_issue-submitted_START.md
+- [x] 4.9.1 ACC-RED
+- [x] 4.9.2 Confirm failure reason
+- [x] 4.9.3 UNIT-RED
+- [x] 4.9.4 UNIT-GREEN
+- [x] 4.9.5 UNIT-REFACTOR
+- [x] 4.9.6 Repeat inward TDD until acceptance is green
+- [x] 4.9.7 ACC-GREEN
+- [x] 4.9.8 Run all prior acceptance tests
+- [x] 4.9.9 ACC-REFACTOR
+- [x] 4.9.10 Write docs/state/STORY_issue-submitted_DONE.md
 
-- [ ] 4.FINAL.1 All acceptance tests green
-- [ ] 4.FINAL.2 Coverage on core ≥ target
-- [ ] 4.FINAL.3 Write docs/state/PHASE_4_DONE.md
+- [x] 4.FINAL.1 All acceptance tests green
+- [x] 4.FINAL.2 Coverage on core >= target
+- [x] 4.FINAL.3 Write docs/state/PHASE_4_DONE.md
 
 ## Phase 5 - Inbound Adapter Diversity
 
@@ -249,7 +249,7 @@
 ## Phase 10 - Turnkey Verification
 
 - [ ] 10.1 Fresh-clone test
-- [ ] 10.2 Install → test → run with zero manual steps
+- [ ] 10.2 Install -> test -> run with zero manual steps
 - [ ] 10.3 Validate compose workflow
 - [ ] 10.4 Validate Kubernetes manifests
 - [ ] 10.5 Write docs/state/FINAL_REPORT.md

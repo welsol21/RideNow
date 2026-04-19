@@ -8,6 +8,10 @@ from ridenow_broker.core.application.request_ride import (
     RequestRideCommand,
     RequestRideUseCase,
 )
+from ridenow_broker.core.application.issue_submission import (
+    IssueSubmissionCommand,
+    IssueSubmissionUseCase,
+)
 from ridenow_broker.core.application.ride_status import GetRideStatusUseCase
 
 
@@ -24,6 +28,15 @@ class RequestRidePayload(BaseModel):
     customer_id: str
     pickup: CoordinatePayload
     dropoff: CoordinatePayload
+
+
+class IssueSubmissionPayload(BaseModel):
+    """HTTP payload for submitting a customer issue."""
+
+    ride_id: str
+    customer_id: str
+    category: str
+    description: str
 
 
 class DriverPayload(BaseModel):
@@ -149,5 +162,30 @@ def create_ride_status_router(use_case: GetRideStatusUseCase) -> APIRouter:
         if result.progress is not None:
             response["progress"] = ProgressPayload(**result.progress).model_dump()
         return response
+
+    return router
+
+
+def create_issue_submission_router(use_case: IssueSubmissionUseCase) -> APIRouter:
+    """Create the Broker router containing the issue-submission endpoint."""
+
+    router = APIRouter()
+
+    @router.post("/issues", status_code=202)
+    async def submit_issue(payload: IssueSubmissionPayload) -> dict[str, str]:
+        """Acknowledge a customer issue submission and return a traceable identifier."""
+
+        result = await use_case.execute(
+            IssueSubmissionCommand(
+                ride_id=payload.ride_id,
+                customer_id=payload.customer_id,
+                category=payload.category,
+                description=payload.description,
+            )
+        )
+        return {
+            "issue_id": result.issue_id,
+            "status": result.status,
+        }
 
     return router

@@ -30,6 +30,11 @@ from ridenow_broker.core.application.apply_ride_completed import (
     ApplyRideCompletedUseCase,
 )
 from ridenow_broker.core.application.apply_trip_progress import ApplyTripProgressUseCase
+from ridenow_broker.core.application.issue_submission import (
+    IssueSubmissionCommand,
+    IssueSubmissionResult,
+    IssueSubmissionUseCase,
+)
 from ridenow_broker.core.application.ride_status import (
     GetRideStatusResult,
     GetRideStatusUseCase,
@@ -49,6 +54,9 @@ __all__ = [
     "ApplyTripProgressUseCase",
     "GetRideStatusResult",
     "GetRideStatusUseCase",
+    "IssueSubmissionCommand",
+    "IssueSubmissionResult",
+    "IssueSubmissionUseCase",
     "RequestRideCommand",
     "RequestRideResult",
     "RequestRideUseCase",
