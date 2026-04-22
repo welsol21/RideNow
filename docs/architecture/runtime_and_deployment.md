@@ -80,6 +80,22 @@ kubectl delete -k infra/kubernetes
   - `local`: probe-only app for early integration baseline
   - `real`: RabbitMQ-backed consumer/publisher runtime with probes and metrics
 
+## Shared Infrastructure vs Service-Local Adapters
+
+The current runtime intentionally shares some infrastructure code across
+services:
+
+- RabbitMQ publishers/consumers live in `src/ridenow_shared/adapters/`
+- service-specific subscription wiring lives in each
+  `services/<name>/.../bootstrap/app.py`
+- this keeps the repeated transport boilerplate small while preserving
+  per-service deployment and ownership boundaries
+
+This means some service-local `adapters/` packages are currently light.
+That is expected. They become the right place for code only when a
+service needs a distinct inbound API, third-party client, persistence
+adapter, or operational concern that is no longer truly shared.
+
 ## Deployment Notes
 
 - Broker is the only public business API

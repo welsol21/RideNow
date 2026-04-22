@@ -14,6 +14,23 @@ This document identifies the implementation scope of each microservice.
 | Tracking | Trip progress and trip completion | RabbitMQ consume | RabbitMQ publish | No |
 | Notification | Relay, fan-out, and visible-event projection | RabbitMQ consume | RabbitMQ publish | No |
 
+## Structural Notes
+
+- Every service keeps the same high-level package shape:
+  `adapters/`, `bootstrap/`, `core/application/`, `core/domain/`.
+- In the current implementation, `broker` is the only service with a
+  substantial service-local inbound adapter surface because it owns the
+  public API and CLI.
+- The other services are intentionally lighter:
+  - their transport wiring is mostly assembled in `bootstrap/app.py`
+  - their RabbitMQ integration uses shared code from
+    `src/ridenow_shared/adapters/`
+  - several `core/domain/` and `adapters/` packages are placeholders for
+    future complexity rather than current omissions
+- This keeps the current demo/runtime small without blocking later
+  extraction of service-specific adapters, persistence, or richer domain
+  models.
+
 ## Broker
 
 - Implements:
@@ -45,6 +62,11 @@ This document identifies the implementation scope of each microservice.
   - driver assignment decision
   - deterministic no-driver branch
   - driver location emission after payment authorisation
+- Current scaling note:
+  - no service-local inbound HTTP adapter or datastore is needed yet
+  - if driver search becomes non-trivial, `core/domain/` is the intended
+    home for driver availability rules, matching policies, and geographic
+    constraints
 - Consumes:
   - `DriverSearchRequested`
   - `PaymentAuthorised`
@@ -60,6 +82,11 @@ This document identifies the implementation scope of each microservice.
   - `RouteRequested`
 - Publishes:
   - `EtaUpdated`
+- Current scaling note:
+  - route logic is still simple enough to remain in application code
+  - a richer version could move route models, map abstractions, and ETA
+    policies into `core/domain/` and provider-specific clients into
+    `adapters/`
 
 ## Pricing
 
@@ -68,6 +95,11 @@ This document identifies the implementation scope of each microservice.
   - `FareRequested`
 - Publishes:
   - `FareEstimated`
+- Current scaling note:
+  - pricing is intentionally deterministic for repeatable tests
+  - surge rules, promotions, tax handling, and pricing engines would be
+    natural future residents of `core/domain/` and service-local
+    adapters
 
 ## Payment
 
@@ -80,6 +112,11 @@ This document identifies the implementation scope of each microservice.
   - `PaymentAuthorised`
   - `PaymentFailed`
   - `PaymentCaptured`
+- Current scaling note:
+  - payment transport is RabbitMQ-only in the current scope
+  - third-party PSP clients, retries, idempotency stores, and ledger
+    persistence would fit naturally into `adapters/` plus a richer domain
+    layer
 
 ## Tracking
 
@@ -89,6 +126,11 @@ This document identifies the implementation scope of each microservice.
 - Publishes:
   - `TripStatusUpdated`
   - `TripCompleted`
+- Current scaling note:
+  - tracking is currently stateless beyond emitted events
+  - route snapshots, geofencing, and historical trip progression would
+    likely introduce service-owned persistence and more substantial
+    domain models
 
 ## Notification
 
@@ -116,3 +158,8 @@ This document identifies the implementation scope of each microservice.
   - `RideCompletedVisible`
   - `PaymentCaptureRequested`
   - `PaymentConfirmedVisible`
+- Current scaling note:
+  - Notification is a relay/projection service in the current scope
+  - if delivery guarantees, template rendering, channel fan-out, or
+    audit history were required, it would grow its own adapters and
+    persistence rather than staying a thin event router

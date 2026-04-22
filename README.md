@@ -52,6 +52,38 @@ Compose-hosted demo stack with monitoring.
 - `infra/kubernetes/` - Kubernetes manifests for the seven services plus dependencies
 - `docs/` - architecture, operations, guides, and state docs
 
+## Possible Scaling
+
+The current codebase is intentionally small enough to stay teachable and
+testable, but several parts are structured for later expansion:
+
+- Empty or near-empty `core/domain/` packages in several services are
+  reserved for future domain entities, value objects, and policy logic.
+  Right now much of the service behaviour fits in application use cases,
+  so creating rich domain models everywhere would be scaffolding without
+  payoff.
+- Minimal `adapters/` packages in services such as `driver`, `route`,
+  `pricing`, `payment`, `tracking`, and `notification` reflect the fact
+  that their real runtime integration is currently assembled in
+  `bootstrap/app.py` plus shared RabbitMQ adapters under
+  `src/ridenow_shared/adapters/`. If a service later grows new inbound
+  APIs, persistence, third-party integrations, or service-local
+  observability hooks, that code belongs in its own `adapters/` package.
+- `src/ridenow_shared/` centralises infrastructure that is identical
+  across services today. If one service later needs a materially
+  different transport, persistence pattern, or adapter policy, that logic
+  can be moved from shared code into a service-local adapter without
+  changing the external event contracts.
+- Most non-Broker services are stateless in the current scope. If the
+  platform later requires service-owned persistence, each service already
+  has an isolated package boundary and deployment unit that can take on
+  its own datastore and migrations independently.
+- Demo behaviour is deterministic by design, for example
+  `customer-no-driver` and `customer-payment-fail`. These are deliberate
+  testability seams, not production policy. A more realistic version
+  would replace them with real eligibility, routing, pricing, and payment
+  decision logic behind the same service boundaries.
+
 ## Tech Stack
 
 - Python 3.12+
