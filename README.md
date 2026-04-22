@@ -81,12 +81,12 @@ curl http://127.0.0.1:8001/health
 curl http://127.0.0.1:8001/ready
 ```
 
-Submit a ride:
+Run manual integration scenarios from Git Bash:
 
-```powershell
-curl -X POST http://127.0.0.1:8001/rides ^
-  -H "Content-Type: application/json" ^
-  -d "{\"customer_id\":\"customer-demo\",\"pickup\":{\"lat\":53.3498,\"lon\":-6.2603},\"dropoff\":{\"lat\":53.3440,\"lon\":-6.2672}}"
+```bash
+./scripts/integration_manual_test.sh happy
+./scripts/integration_manual_test.sh no-driver
+./scripts/integration_manual_test.sh payment-fail
 ```
 
 Stop the stack:

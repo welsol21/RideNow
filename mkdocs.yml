@@ -17,5 +17,6 @@ nav:
       - Monitoring: operations/monitoring.md
   - Guides:
       - Running Locally: guides/running_locally.md
+      - Manual Integration Testing: guides/manual_integration_testing.md
       - Kubernetes Demo: guides/kubernetes_demo.md
       - Broker Service Implementation: guides/broker_service_implementation.md

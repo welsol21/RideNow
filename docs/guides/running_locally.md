@@ -29,57 +29,26 @@ curl http://127.0.0.1:8002/ready
 curl http://127.0.0.1:8007/ready
 ```
 
-## Happy-Path Demo
+## Manual End-to-End Demo
 
-Create a ride:
+For the quickest manual verification, use the helper script from Git
+Bash:
 
-```powershell
-curl -X POST http://127.0.0.1:8001/rides ^
-  -H "Content-Type: application/json" ^
-  -d "{\"customer_id\":\"customer-demo\",\"pickup\":{\"lat\":53.3498,\"lon\":-6.2603},\"dropoff\":{\"lat\":53.3440,\"lon\":-6.2672}}"
+```bash
+./scripts/integration_manual_test.sh health
+./scripts/integration_manual_test.sh happy
+./scripts/integration_manual_test.sh no-driver
+./scripts/integration_manual_test.sh payment-fail
 ```
 
-Poll the ride:
+This script prints:
 
-```powershell
-curl http://127.0.0.1:8001/rides/<ride-id>
-```
+- the request body it sends
+- the immediate API response
+- the polled customer-visible ride status until the expected final state
 
-The ride should progress to:
-
-- `request-submitted`
-- `driver-assigned`
-- `eta-updated`
-- `payment-authorised`
-- `trip-in-progress`
-- `ride-completed`
-- `payment-confirmed`
-
-## Failure Demos
-
-No driver available:
-
-```powershell
-curl -X POST http://127.0.0.1:8001/rides ^
-  -H "Content-Type: application/json" ^
-  -d "{\"customer_id\":\"customer-no-driver\",\"pickup\":{\"lat\":53.3498,\"lon\":-6.2603},\"dropoff\":{\"lat\":53.3440,\"lon\":-6.2672}}"
-```
-
-Payment failed:
-
-```powershell
-curl -X POST http://127.0.0.1:8001/rides ^
-  -H "Content-Type: application/json" ^
-  -d "{\"customer_id\":\"customer-payment-fail\",\"pickup\":{\"lat\":53.3498,\"lon\":-6.2603},\"dropoff\":{\"lat\":53.3440,\"lon\":-6.2672}}"
-```
-
-## Submit an Issue
-
-```powershell
-curl -X POST http://127.0.0.1:8001/issues ^
-  -H "Content-Type: application/json" ^
-  -d "{\"ride_id\":\"<ride-id>\",\"customer_id\":\"customer-demo\",\"category\":\"payment\",\"description\":\"Need a refund check.\"}"
-```
+For request/response examples and the `issue` flow, see
+`docs/guides/manual_integration_testing.md`.
 
 ## Broker CLI
 
