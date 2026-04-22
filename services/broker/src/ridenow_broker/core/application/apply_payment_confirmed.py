@@ -18,7 +18,8 @@ class ApplyPaymentConfirmedUseCase:
         ride_id = str(event.payload.data["ride_id"])
         current_state = await self._status_store.get(ride_id) or {}
         next_state = dict(current_state)
-        payment = dict(current_state.get("payment", {}))
+        current_payment = current_state.get("payment")
+        payment = dict(current_payment) if isinstance(current_payment, dict) else {}
         payment["capture_id"] = str(event.payload.data["capture_id"])
         payment["status"] = "captured"
         next_state["payment"] = payment

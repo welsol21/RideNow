@@ -3,6 +3,7 @@
 from ridenow_broker.core.application.apply_driver_assigned import (
     ApplyDriverAssignedUseCase,
 )
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

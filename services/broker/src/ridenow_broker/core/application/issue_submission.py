@@ -1,5 +1,6 @@
 """Broker use case that acknowledges customer issue submissions."""
 
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from ridenow_broker.core.application.ports import BrokerEventPublisher, IssueStore
@@ -31,16 +32,18 @@ class IssueSubmissionUseCase:
         self,
         issue_store: IssueStore,
         event_publisher: BrokerEventPublisher,
+        issue_id_factory: Callable[[], str] | None = None,
     ) -> None:
         """Store outbound dependencies used by the use case."""
 
         self._issue_store = issue_store
         self._event_publisher = event_publisher
+        self._issue_id_factory = issue_id_factory or (lambda: "issue-1")
 
     async def execute(self, command: IssueSubmissionCommand) -> IssueSubmissionResult:
         """Persist the issue and publish an IssueSubmitted event."""
 
-        issue_id = "issue-1"
+        issue_id = self._issue_id_factory()
         await self._issue_store.put(
             issue_id,
             {

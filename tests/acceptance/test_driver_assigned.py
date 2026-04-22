@@ -1,20 +1,18 @@
 """Acceptance test for customer-visible driver assignment."""
 
-from fastapi.testclient import TestClient
 import pytest
-
-from ridenow_broker.bootstrap.app import create_app
+from tests.acceptance.support import BrokerAcceptanceClient
 
 
 @pytest.mark.acceptance
-def test_driver_assignment_becomes_visible_to_the_customer() -> None:
+def test_driver_assignment_becomes_visible_to_the_customer(
+    broker_client: BrokerAcceptanceClient,
+) -> None:
     """Verify that the customer can observe a driver-assigned ride state."""
 
-    client = TestClient(create_app())
-
-    creation_response = client.post(
+    creation_response = broker_client.post(
         "/rides",
-        json={
+        {
             "customer_id": "customer-1",
             "pickup": {"lat": 53.3498, "lon": -6.2603},
             "dropoff": {"lat": 53.3440, "lon": -6.2672},
@@ -22,7 +20,7 @@ def test_driver_assignment_becomes_visible_to_the_customer() -> None:
     )
 
     ride_id = creation_response.json()["ride_id"]
-    response = client.get(f"/rides/{ride_id}")
+    response = broker_client.wait_for_status(ride_id, "driver-assigned")
 
     assert response.status_code == 200
     assert response.json() == {

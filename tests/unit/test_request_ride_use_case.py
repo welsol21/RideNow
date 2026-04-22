@@ -5,6 +5,7 @@ from ridenow_broker.core.application.request_ride import (
     RequestRideResult,
     RequestRideUseCase,
 )
+
 from ridenow_shared.events import EventEnvelope
 
 

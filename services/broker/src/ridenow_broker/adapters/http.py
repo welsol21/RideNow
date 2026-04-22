@@ -1,16 +1,18 @@
 """HTTP adapter for Broker health and ride-request endpoints."""
 
+from collections.abc import Callable
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from ridenow_broker.core.application.health import HealthCheckUseCase
-from ridenow_broker.core.application.request_ride import (
-    RequestRideCommand,
-    RequestRideUseCase,
-)
 from ridenow_broker.core.application.issue_submission import (
     IssueSubmissionCommand,
     IssueSubmissionUseCase,
+)
+from ridenow_broker.core.application.request_ride import (
+    RequestRideCommand,
+    RequestRideUseCase,
 )
 from ridenow_broker.core.application.ride_status import GetRideStatusUseCase
 
@@ -72,7 +74,19 @@ class ProgressPayload(BaseModel):
     driver_lon: float
 
 
-def create_health_router(use_case: HealthCheckUseCase) -> APIRouter:
+def _resolve_use_case[UseCaseT](
+    use_case: UseCaseT | Callable[[], UseCaseT],
+) -> UseCaseT:
+    """Resolve a direct use case instance or a supplier."""
+
+    if callable(use_case):
+        return use_case()
+    return use_case
+
+
+def create_health_router(
+    use_case: HealthCheckUseCase | Callable[[], HealthCheckUseCase],
+) -> APIRouter:
     """Create the Broker router containing the health endpoint.
 
     Parameters:
@@ -91,7 +105,7 @@ def create_health_router(use_case: HealthCheckUseCase) -> APIRouter:
     def health_check() -> dict[str, str]:
         """Return the current broker health payload."""
 
-        status = use_case.execute()
+        status = _resolve_use_case(use_case).execute()
         return {
             "service": status.service,
             "status": status.status,
@@ -101,7 +115,7 @@ def create_health_router(use_case: HealthCheckUseCase) -> APIRouter:
     def readiness_check() -> dict[str, str]:
         """Return the current broker readiness payload."""
 
-        status = use_case.execute()
+        status = _resolve_use_case(use_case).execute()
         return {
             "service": status.service,
             "status": "ready",
@@ -110,7 +124,9 @@ def create_health_router(use_case: HealthCheckUseCase) -> APIRouter:
     return router
 
 
-def create_request_ride_router(use_case: RequestRideUseCase) -> APIRouter:
+def create_request_ride_router(
+    use_case: RequestRideUseCase | Callable[[], RequestRideUseCase],
+) -> APIRouter:
     """Create the Broker router containing the ride-request endpoint."""
 
     router = APIRouter()
@@ -119,7 +135,7 @@ def create_request_ride_router(use_case: RequestRideUseCase) -> APIRouter:
     async def request_ride(payload: RequestRidePayload) -> dict[str, str]:
         """Acknowledge a ride request and return customer-visible status."""
 
-        result = await use_case.execute(
+        result = await _resolve_use_case(use_case).execute(
             RequestRideCommand(
                 customer_id=payload.customer_id,
                 pickup=payload.pickup.model_dump(),
@@ -134,7 +150,9 @@ def create_request_ride_router(use_case: RequestRideUseCase) -> APIRouter:
     return router
 
 
-def create_ride_status_router(use_case: GetRideStatusUseCase) -> APIRouter:
+def create_ride_status_router(
+    use_case: GetRideStatusUseCase | Callable[[], GetRideStatusUseCase],
+) -> APIRouter:
     """Create the Broker router containing the customer-visible ride read endpoint."""
 
     router = APIRouter()
@@ -143,7 +161,7 @@ def create_ride_status_router(use_case: GetRideStatusUseCase) -> APIRouter:
     async def get_ride_status(ride_id: str) -> dict[str, object]:
         """Return customer-visible ride state for the given ride identifier."""
 
-        result = await use_case.execute(ride_id)
+        result = await _resolve_use_case(use_case).execute(ride_id)
         if result is None:
             raise HTTPException(status_code=404, detail="Ride not found")
 
@@ -152,21 +170,29 @@ def create_ride_status_router(use_case: GetRideStatusUseCase) -> APIRouter:
             "status": result.status,
         }
         if result.driver is not None:
-            response["driver"] = DriverPayload(**result.driver).model_dump()
+            response["driver"] = (
+                DriverPayload.model_validate(result.driver).model_dump()
+            )
         if result.route is not None:
-            response["route"] = RoutePayload(**result.route).model_dump()
+            response["route"] = RoutePayload.model_validate(result.route).model_dump()
         if result.payment is not None:
-            response["payment"] = PaymentPayload(**result.payment).model_dump(
-                exclude_none=True
+            response["payment"] = (
+                PaymentPayload.model_validate(result.payment).model_dump(
+                    exclude_none=True
+                )
             )
         if result.progress is not None:
-            response["progress"] = ProgressPayload(**result.progress).model_dump()
+            response["progress"] = ProgressPayload.model_validate(
+                result.progress
+            ).model_dump()
         return response
 
     return router
 
 
-def create_issue_submission_router(use_case: IssueSubmissionUseCase) -> APIRouter:
+def create_issue_submission_router(
+    use_case: IssueSubmissionUseCase | Callable[[], IssueSubmissionUseCase],
+) -> APIRouter:
     """Create the Broker router containing the issue-submission endpoint."""
 
     router = APIRouter()
@@ -175,7 +201,7 @@ def create_issue_submission_router(use_case: IssueSubmissionUseCase) -> APIRoute
     async def submit_issue(payload: IssueSubmissionPayload) -> dict[str, str]:
         """Acknowledge a customer issue submission and return a traceable identifier."""
 
-        result = await use_case.execute(
+        result = await _resolve_use_case(use_case).execute(
             IssueSubmissionCommand(
                 ride_id=payload.ride_id,
                 customer_id=payload.customer_id,

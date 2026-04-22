@@ -1,6 +1,7 @@
 """Unit tests for Pricing fare calculation behaviour."""
 
 from ridenow_pricing.core.application.calculate_fare import CalculateFareUseCase
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

@@ -3,6 +3,7 @@
 from ridenow_driver.core.application.emit_driver_location_update import (
     EmitDriverLocationUpdateUseCase,
 )
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 
@@ -20,7 +21,8 @@ class RecordingEventPublisher:
         self.events.append(event)
 
 
-async def test_driver_service_emits_location_update_after_payment_authorisation() -> None:
+async def test_driver_service_emits_location_update_after_payment_authorisation(
+) -> None:
     """Verify Driver starts trip progress updates after payment authorisation."""
 
     publisher = RecordingEventPublisher()

@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      containers:
+        - name: notification
+          image: compose-notification:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: RIDENOW_RUNTIME_MODE
+              value: real
+            - name: RIDENOW_SERVICE_NAME
+              value: notification
+            - name: RIDENOW_HTTP_PORT
+              value: "8007"
+            - name: RIDENOW_RABBITMQ_URL
+              value: amqp://guest:guest@rabbitmq:5672/
+          ports:
+            - containerPort: 8007
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8007
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8007
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification
+spec:
+  selector:
+    app: notification
+  ports:
+    - name: http
+      port: 8007
+      targetPort: 8007

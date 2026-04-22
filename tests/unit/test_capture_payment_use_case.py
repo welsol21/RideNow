@@ -1,6 +1,7 @@
 """Unit tests for Payment capture behaviour."""
 
 from ridenow_payment.core.application.capture_payment import CapturePaymentUseCase
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

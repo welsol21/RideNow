@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ridenow
+
+resources:
+  - namespace.yaml
+  - rabbitmq.yaml
+  - postgres.yaml
+  - broker.yaml
+  - driver.yaml
+  - route.yaml
+  - pricing.yaml
+  - payment.yaml
+  - tracking.yaml
+  - notification.yaml

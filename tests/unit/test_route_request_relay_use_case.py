@@ -3,6 +3,7 @@
 from ridenow_notification.core.application.relay_route_request import (
     RelayRouteRequestUseCase,
 )
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

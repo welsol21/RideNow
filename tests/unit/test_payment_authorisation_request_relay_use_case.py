@@ -3,6 +3,7 @@
 from ridenow_notification.core.application.relay_payment_authorisation_request import (
     RelayPaymentAuthorisationRequestUseCase,
 )
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 
@@ -20,7 +21,8 @@ class RecordingEventPublisher:
         self.events.append(event)
 
 
-async def test_notification_relays_fare_estimate_to_payment_authorisation_request() -> None:
+async def test_notification_relays_fare_estimate_to_payment_authorisation_request(
+) -> None:
     """Verify Notification turns FareEstimated into PaymentAuthorisationRequested."""
 
     publisher = RecordingEventPublisher()

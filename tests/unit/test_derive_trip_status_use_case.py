@@ -1,6 +1,7 @@
 """Unit tests for Tracking trip-status derivation behaviour."""
 
 from ridenow_tracking.core.application.derive_trip_status import DeriveTripStatusUseCase
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

@@ -1,7 +1,8 @@
 """Unit tests for Tracking trip completion behaviour."""
 
-from ridenow_shared.events import DomainEventPayload, EventEnvelope
 from ridenow_tracking.core.application.complete_trip import CompleteTripUseCase
+
+from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 
 class RecordingEventPublisher:

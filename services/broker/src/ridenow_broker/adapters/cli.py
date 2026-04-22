@@ -6,13 +6,16 @@ import argparse
 import asyncio
 import json
 import sys
-from collections.abc import Sequence
+from typing import TYPE_CHECKING
 
+from ridenow_broker.bootstrap.runtime import create_runtime
 from ridenow_broker.core.application import (
     IssueSubmissionCommand,
     RequestRideCommand,
 )
-from ridenow_broker.bootstrap.runtime import create_runtime
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -46,10 +49,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     runtime = create_runtime()
 
     if args.command == "health":
-        result = runtime.health_check.execute()
-        payload = {"service": result.service, "status": result.status}
+        health = runtime.health_check.execute()
+        payload = {"service": health.service, "status": health.status}
     elif args.command == "request-ride":
-        result = asyncio.run(
+        ride = asyncio.run(
             runtime.request_ride.execute(
                 RequestRideCommand(
                     customer_id=args.customer_id,
@@ -58,9 +61,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                 )
             )
         )
-        payload = {"ride_id": result.ride_id, "status": result.status}
+        payload = {"ride_id": ride.ride_id, "status": ride.status}
     else:
-        result = asyncio.run(
+        issue = asyncio.run(
             runtime.issue_submission.execute(
                 IssueSubmissionCommand(
                     ride_id=args.ride_id,
@@ -70,7 +73,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 )
             )
         )
-        payload = {"issue_id": result.issue_id, "status": result.status}
+        payload = {"issue_id": issue.issue_id, "status": issue.status}
 
     sys.stdout.write(json.dumps(payload))
     return 0

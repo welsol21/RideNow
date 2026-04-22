@@ -1,6 +1,7 @@
 """Unit tests for Route ETA calculation behaviour."""
 
 from ridenow_route.core.application.calculate_route import CalculateRouteUseCase
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

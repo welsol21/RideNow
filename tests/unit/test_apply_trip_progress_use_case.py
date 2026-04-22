@@ -1,6 +1,7 @@
 """Unit tests for Broker application of trip progress updates."""
 
 from ridenow_broker.core.application.apply_trip_progress import ApplyTripProgressUseCase
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

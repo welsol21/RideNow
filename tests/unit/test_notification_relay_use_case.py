@@ -3,6 +3,7 @@
 from ridenow_notification.core.application.relay_driver_search import (
     RelayDriverSearchUseCase,
 )
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

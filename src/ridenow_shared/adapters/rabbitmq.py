@@ -8,6 +8,7 @@ from aio_pika import DeliveryMode, ExchangeType, Message, connect_robust
 
 from ridenow_shared.config.settings import RabbitMqSettings
 from ridenow_shared.events import EventEnvelope
+from ridenow_shared.retry import retry_async
 
 if TYPE_CHECKING:
     from aio_pika.abc import (
@@ -135,7 +136,7 @@ async def _open_exchange(
 ]:
     """Open the transport objects shared by publisher and consumer factories."""
 
-    connection = await connect_robust(settings.url)
+    connection = await retry_async(lambda: connect_robust(settings.url))
     channel = await connection.channel()
     exchange = await channel.declare_exchange(
         settings.exchange,

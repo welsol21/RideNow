@@ -3,6 +3,7 @@
 from ridenow_notification.core.application.relay_payment_captured import (
     RelayPaymentCapturedUseCase,
 )
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

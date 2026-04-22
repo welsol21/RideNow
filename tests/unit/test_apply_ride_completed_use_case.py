@@ -3,6 +3,7 @@
 from ridenow_broker.core.application.apply_ride_completed import (
     ApplyRideCompletedUseCase,
 )
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

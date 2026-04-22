@@ -1,6 +1,7 @@
 """Unit tests for Driver assignment behaviour."""
 
 from ridenow_driver.core.application.assign_driver import AssignDriverUseCase
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

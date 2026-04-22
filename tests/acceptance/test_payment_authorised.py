@@ -1,22 +1,18 @@
 """Acceptance test for customer-visible payment authorisation."""
 
-from time import sleep
-
-from fastapi.testclient import TestClient
 import pytest
-
-from ridenow_broker.bootstrap.app import create_app
+from tests.acceptance.support import BrokerAcceptanceClient
 
 
 @pytest.mark.acceptance
-def test_payment_authorisation_becomes_visible_to_the_customer() -> None:
+def test_payment_authorisation_becomes_visible_to_the_customer(
+    broker_client: BrokerAcceptanceClient,
+) -> None:
     """Verify that payment authorisation becomes visible after route feedback."""
 
-    client = TestClient(create_app())
-
-    creation_response = client.post(
+    creation_response = broker_client.post(
         "/rides",
-        json={
+        {
             "customer_id": "customer-1",
             "pickup": {"lat": 53.3498, "lon": -6.2603},
             "dropoff": {"lat": 53.3440, "lon": -6.2672},
@@ -24,25 +20,11 @@ def test_payment_authorisation_becomes_visible_to_the_customer() -> None:
     )
 
     ride_id = creation_response.json()["ride_id"]
-
-    eta_response = None
-    for _ in range(10):
-        sleep(0.05)
-        candidate = client.get(f"/rides/{ride_id}")
-        if candidate.json()["status"] == "eta-updated":
-            eta_response = candidate
-            break
-
-    assert eta_response is not None
+    eta_response = broker_client.wait_for_status(ride_id, "eta-updated")
     assert eta_response.status_code == 200
     assert eta_response.json()["status"] == "eta-updated"
 
-    response = eta_response
-    for _ in range(10):
-        sleep(0.05)
-        response = client.get(f"/rides/{ride_id}")
-        if response.json()["status"] == "payment-authorised":
-            break
+    response = broker_client.wait_for_status(ride_id, "payment-authorised")
 
     assert response.status_code == 200
     assert response.json() == {
@@ -58,7 +40,7 @@ def test_payment_authorisation_becomes_visible_to_the_customer() -> None:
             "trip_duration_minutes": 11,
         },
         "payment": {
-            "authorisation_id": "auth-ride-1",
+            "authorisation_id": f"auth-{ride_id}",
             "amount": 18.5,
             "currency": "EUR",
         },

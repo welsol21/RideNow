@@ -3,6 +3,7 @@
 from ridenow_broker.core.application.apply_payment_failed import (
     ApplyPaymentFailedUseCase,
 )
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

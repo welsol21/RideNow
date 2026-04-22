@@ -1,6 +1,7 @@
 """Unit tests for Broker application of ETA updates."""
 
 from ridenow_broker.core.application.apply_eta_updated import ApplyEtaUpdatedUseCase
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

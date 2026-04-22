@@ -3,6 +3,7 @@
 from ridenow_broker.core.application.apply_payment_confirmed import (
     ApplyPaymentConfirmedUseCase,
 )
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

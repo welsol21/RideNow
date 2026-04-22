@@ -5,6 +5,12 @@ from dataclasses import dataclass
 from ridenow_broker.core.application.ports import RideStatusStore
 
 
+def _payload_or_none(value: object) -> dict[str, object] | None:
+    """Return customer-visible payloads only when they are dictionaries."""
+
+    return value if isinstance(value, dict) else None
+
+
 @dataclass(frozen=True)
 class GetRideStatusResult:
     """Customer-visible ride status returned by the Broker read boundary."""
@@ -34,10 +40,8 @@ class GetRideStatusUseCase:
         return GetRideStatusResult(
             ride_id=ride_id,
             status=str(state["status"]),
-            driver=state.get("driver") if isinstance(state.get("driver"), dict) else None,
-            route=state.get("route") if isinstance(state.get("route"), dict) else None,
-            payment=state.get("payment") if isinstance(state.get("payment"), dict) else None,
-            progress=state.get("progress")
-            if isinstance(state.get("progress"), dict)
-            else None,
+            driver=_payload_or_none(state.get("driver")),
+            route=_payload_or_none(state.get("route")),
+            payment=_payload_or_none(state.get("payment")),
+            progress=_payload_or_none(state.get("progress")),
         )

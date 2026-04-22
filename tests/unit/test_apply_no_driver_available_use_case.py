@@ -3,6 +3,7 @@
 from ridenow_broker.core.application.apply_no_driver_available import (
     ApplyNoDriverAvailableUseCase,
 )
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

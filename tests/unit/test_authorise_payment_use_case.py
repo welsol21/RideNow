@@ -1,6 +1,7 @@
 """Unit tests for Payment authorisation behaviour."""
 
 from ridenow_payment.core.application.authorise_payment import AuthorisePaymentUseCase
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 
@@ -55,7 +56,7 @@ async def test_payment_service_publishes_payment_authorised() -> None:
 
 
 async def test_payment_service_can_publish_payment_failed() -> None:
-    """Verify Payment emits the payment-failed outcome for deterministic failure input."""
+    """Verify Payment emits payment-failed for deterministic failure input."""
 
     publisher = RecordingEventPublisher()
     use_case = AuthorisePaymentUseCase(event_publisher=publisher)

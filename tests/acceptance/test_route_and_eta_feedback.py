@@ -1,22 +1,18 @@
 """Acceptance test for customer-visible route and ETA feedback."""
 
-from time import sleep
-
-from fastapi.testclient import TestClient
 import pytest
-
-from ridenow_broker.bootstrap.app import create_app
+from tests.acceptance.support import BrokerAcceptanceClient
 
 
 @pytest.mark.acceptance
-def test_route_and_eta_feedback_become_visible_to_the_customer() -> None:
+def test_route_and_eta_feedback_become_visible_to_the_customer(
+    broker_client: BrokerAcceptanceClient,
+) -> None:
     """Verify that route and ETA details become visible after driver assignment."""
 
-    client = TestClient(create_app())
-
-    creation_response = client.post(
+    creation_response = broker_client.post(
         "/rides",
-        json={
+        {
             "customer_id": "customer-1",
             "pickup": {"lat": 53.3498, "lon": -6.2603},
             "dropoff": {"lat": 53.3440, "lon": -6.2672},
@@ -24,17 +20,12 @@ def test_route_and_eta_feedback_become_visible_to_the_customer() -> None:
     )
 
     ride_id = creation_response.json()["ride_id"]
-    first_status = client.get(f"/rides/{ride_id}")
+    first_status = broker_client.wait_for_status(ride_id, "driver-assigned")
 
     assert first_status.status_code == 200
     assert first_status.json()["status"] == "driver-assigned"
 
-    response = first_status
-    for _ in range(10):
-        sleep(0.05)
-        response = client.get(f"/rides/{ride_id}")
-        if response.json()["status"] == "eta-updated":
-            break
+    response = broker_client.wait_for_status(ride_id, "eta-updated")
 
     assert response.status_code == 200
     assert response.json() == {

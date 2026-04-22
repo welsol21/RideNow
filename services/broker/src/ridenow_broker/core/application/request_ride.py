@@ -1,5 +1,6 @@
 """Request-ride use case for the Broker service."""
 
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from ridenow_broker.core.application.ports import BrokerEventPublisher, RideStatusStore
@@ -64,17 +65,19 @@ class RequestRideUseCase:
         self,
         status_store: RideStatusStore,
         event_publisher: BrokerEventPublisher,
+        ride_id_factory: Callable[[], str] | None = None,
     ) -> None:
         """Store the outbound dependencies used by the use case."""
 
         self._status_store = status_store
         self._event_publisher = event_publisher
+        self._ride_id_factory = ride_id_factory or (lambda: "ride-1")
 
     async def execute(self, command: RequestRideCommand) -> RequestRideResult:
         """Persist the initial ride state and publish a ride-request event."""
 
-        ride_id = "ride-1"
-        state = {
+        ride_id = self._ride_id_factory()
+        state: dict[str, object] = {
             "customer_id": command.customer_id,
             "status": "request-submitted",
             "pickup": command.pickup,

@@ -3,12 +3,13 @@
 import json
 
 import pytest
-
 from ridenow_broker.adapters.cli import main
 
 
 @pytest.mark.acceptance
-def test_cli_health_command_returns_service_status(capsys: pytest.CaptureFixture[str]) -> None:
+def test_cli_health_command_returns_service_status(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
     """Verify the CLI can expose the Broker health check."""
 
     exit_code = main(["health"])

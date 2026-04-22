@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `6.3`
+- Next unchecked item: `7.1`
 
 ## Phase 0 - Bootstrap
 
@@ -199,11 +199,11 @@
 
 - [x] 6.1 Real RabbitMQ adapters + contract/integration tests
 - [x] 6.2 Real PostgreSQL adapters + contract/integration tests
-- [ ] 6.3 Real service wiring with Docker Compose
-- [ ] 6.4 Kubernetes manifests
-- [ ] 6.5 Run full acceptance suite with real adapters wired
-- [ ] 6.6 PHASE 6 GATE
-- [ ] 6.7 Write docs/state/PHASE_6_DONE.md
+- [x] 6.3 Real service wiring with Docker Compose
+- [x] 6.4 Kubernetes manifests
+- [x] 6.5 Run full acceptance suite with real adapters wired
+- [x] 6.6 PHASE 6 GATE
+- [x] 6.7 Write docs/state/PHASE_6_DONE.md
 
 ## Phase 7 - Smoke E2E & Observability
 

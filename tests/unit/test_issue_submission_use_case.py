@@ -5,6 +5,7 @@ from ridenow_broker.core.application.issue_submission import (
     IssueSubmissionResult,
     IssueSubmissionUseCase,
 )
+
 from ridenow_shared.events import EventEnvelope
 
 

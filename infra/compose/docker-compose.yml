@@ -26,8 +26,11 @@ services:
       - rabbitmq
       - postgres
     environment:
+      RIDENOW_RUNTIME_MODE: real
       RIDENOW_SERVICE_NAME: broker
       RIDENOW_HTTP_PORT: 8001
+      RIDENOW_RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      RIDENOW_POSTGRES_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/ridenow
     ports:
       - "8001:8001"
 
@@ -41,8 +44,11 @@ services:
       - rabbitmq
       - postgres
     environment:
+      RIDENOW_RUNTIME_MODE: real
       RIDENOW_SERVICE_NAME: driver
       RIDENOW_HTTP_PORT: 8002
+      RIDENOW_RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      RIDENOW_POSTGRES_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/ridenow
     ports:
       - "8002:8002"
 
@@ -56,8 +62,11 @@ services:
       - rabbitmq
       - postgres
     environment:
+      RIDENOW_RUNTIME_MODE: real
       RIDENOW_SERVICE_NAME: route
       RIDENOW_HTTP_PORT: 8003
+      RIDENOW_RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      RIDENOW_POSTGRES_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/ridenow
     ports:
       - "8003:8003"
 
@@ -71,8 +80,11 @@ services:
       - rabbitmq
       - postgres
     environment:
+      RIDENOW_RUNTIME_MODE: real
       RIDENOW_SERVICE_NAME: pricing
       RIDENOW_HTTP_PORT: 8004
+      RIDENOW_RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      RIDENOW_POSTGRES_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/ridenow
     ports:
       - "8004:8004"
 
@@ -86,8 +98,11 @@ services:
       - rabbitmq
       - postgres
     environment:
+      RIDENOW_RUNTIME_MODE: real
       RIDENOW_SERVICE_NAME: payment
       RIDENOW_HTTP_PORT: 8005
+      RIDENOW_RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      RIDENOW_POSTGRES_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/ridenow
     ports:
       - "8005:8005"
 
@@ -101,8 +116,11 @@ services:
       - rabbitmq
       - postgres
     environment:
+      RIDENOW_RUNTIME_MODE: real
       RIDENOW_SERVICE_NAME: tracking
       RIDENOW_HTTP_PORT: 8006
+      RIDENOW_RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      RIDENOW_POSTGRES_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/ridenow
     ports:
       - "8006:8006"
 
@@ -116,8 +134,11 @@ services:
       - rabbitmq
       - postgres
     environment:
+      RIDENOW_RUNTIME_MODE: real
       RIDENOW_SERVICE_NAME: notification
       RIDENOW_HTTP_PORT: 8007
+      RIDENOW_RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      RIDENOW_POSTGRES_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/ridenow
     ports:
       - "8007:8007"
 

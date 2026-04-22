@@ -3,6 +3,7 @@
 from ridenow_notification.core.application.relay_no_driver_available import (
     RelayNoDriverAvailableUseCase,
 )
+
 from ridenow_shared.events import DomainEventPayload, EventEnvelope
 
 

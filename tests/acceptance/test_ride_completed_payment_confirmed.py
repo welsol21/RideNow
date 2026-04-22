@@ -1,22 +1,18 @@
 """Acceptance test for ride completion and payment confirmation."""
 
-from time import sleep
-
-from fastapi.testclient import TestClient
 import pytest
-
-from ridenow_broker.bootstrap.app import create_app
+from tests.acceptance.support import BrokerAcceptanceClient
 
 
 @pytest.mark.acceptance
-def test_ride_completion_and_payment_confirmation_become_visible() -> None:
+def test_ride_completion_and_payment_confirmation_become_visible(
+    broker_client: BrokerAcceptanceClient,
+) -> None:
     """Verify that ride completion and payment confirmation become customer-visible."""
 
-    client = TestClient(create_app())
-
-    creation_response = client.post(
+    creation_response = broker_client.post(
         "/rides",
-        json={
+        {
             "customer_id": "customer-1",
             "pickup": {"lat": 53.3498, "lon": -6.2603},
             "dropoff": {"lat": 53.3440, "lon": -6.2672},
@@ -24,35 +20,16 @@ def test_ride_completion_and_payment_confirmation_become_visible() -> None:
     )
 
     ride_id = creation_response.json()["ride_id"]
-
-    progress_response = None
-    for _ in range(14):
-        sleep(0.05)
-        candidate = client.get(f"/rides/{ride_id}")
-        if candidate.json()["status"] == "trip-in-progress":
-            progress_response = candidate
-            break
-
-    assert progress_response is not None
+    progress_response = broker_client.wait_for_status(ride_id, "trip-in-progress")
     assert progress_response.status_code == 200
     assert progress_response.json()["status"] == "trip-in-progress"
 
-    completed_response = progress_response
-    for _ in range(14):
-        sleep(0.05)
-        completed_response = client.get(f"/rides/{ride_id}")
-        if completed_response.json()["status"] == "ride-completed":
-            break
+    completed_response = broker_client.wait_for_status(ride_id, "ride-completed")
 
     assert completed_response.status_code == 200
     assert completed_response.json()["status"] == "ride-completed"
 
-    response = completed_response
-    for _ in range(14):
-        sleep(0.05)
-        response = client.get(f"/rides/{ride_id}")
-        if response.json()["status"] == "payment-confirmed":
-            break
+    response = broker_client.wait_for_status(ride_id, "payment-confirmed")
 
     assert response.status_code == 200
     assert response.json() == {
@@ -68,8 +45,8 @@ def test_ride_completion_and_payment_confirmation_become_visible() -> None:
             "trip_duration_minutes": 11,
         },
         "payment": {
-            "authorisation_id": "auth-ride-1",
-            "capture_id": "cap-ride-1",
+            "authorisation_id": f"auth-{ride_id}",
+            "capture_id": f"cap-{ride_id}",
             "amount": 18.5,
             "currency": "EUR",
             "status": "captured",

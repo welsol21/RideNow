@@ -7,6 +7,7 @@ from sqlalchemy.dialects.postgresql import JSONB, insert
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async_engine
 
 from ridenow_shared.config.settings import PostgresSettings
+from ridenow_shared.retry import retry_async
 
 
 class PostgresStateStore:
@@ -81,12 +82,17 @@ async def create_state_store(
         Column("payload", JSONB, nullable=False),
     )
 
-    async with engine.begin() as connection:
-        if resolved_settings.schema_name != "public":
-            await connection.execute(
-                text(f'CREATE SCHEMA IF NOT EXISTS "{resolved_settings.schema_name}"')
-            )
-        await connection.run_sync(metadata.create_all)
+    async def initialise_store() -> None:
+        async with engine.begin() as connection:
+            if resolved_settings.schema_name != "public":
+                await connection.execute(
+                    text(
+                        f'CREATE SCHEMA IF NOT EXISTS "{resolved_settings.schema_name}"'
+                    )
+                )
+            await connection.run_sync(metadata.create_all)
+
+    await retry_async(initialise_store)
 
     return PostgresStateStore(
         engine=engine,
