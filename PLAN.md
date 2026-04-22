@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `10.1`
+- Next unchecked item: `none`
 
 ## Phase 0 - Bootstrap
 
@@ -248,11 +248,11 @@
 
 ## Phase 10 - Turnkey Verification
 
-- [ ] 10.1 Fresh-clone test
-- [ ] 10.2 Install -> test -> run with zero manual steps
-- [ ] 10.3 Validate compose workflow
-- [ ] 10.4 Validate Kubernetes manifests
-- [ ] 10.5 Write docs/state/FINAL_REPORT.md
+- [x] 10.1 Fresh-clone test
+- [x] 10.2 Install -> test -> run with zero manual steps
+- [x] 10.3 Validate compose workflow
+- [x] 10.4 Validate Kubernetes manifests
+- [x] 10.5 Write docs/state/FINAL_REPORT.md
 
 ## Backlog
 

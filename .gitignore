@@ -6,11 +6,13 @@
 .venv-docs/
 .tmp-docker-config/
 .tmp-pip-audit-cache/
+.tmp-pip-audit-temp/
 build/
 dist/
 docs/local/
 htmlcov/
 site/
+turnkey-fresh-clone/
 __pycache__/
 *.egg-info/
 *.pyc
