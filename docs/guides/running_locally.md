@@ -18,7 +18,7 @@ python -m venv .venv
 ## Start the Full Stack
 
 ```powershell
-docker compose -f infra/compose/docker-compose.yml up -d --build
+.\scripts\start.ps1
 ```
 
 ## Verify Readiness
@@ -92,5 +92,5 @@ curl -X POST http://127.0.0.1:8001/issues ^
 ## Stop the Stack
 
 ```powershell
-docker compose -f infra/compose/docker-compose.yml down -v
+.\scripts\stop.ps1
 ```

@@ -71,7 +71,7 @@ Compose-hosted demo stack with monitoring.
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 .\.venv\Scripts\python.exe -m pip install -e ".[dev,docs,nonfunctional]"
-docker compose -f infra/compose/docker-compose.yml up -d --build
+.\scripts\start.ps1
 ```
 
 Probe the Broker:
@@ -92,7 +92,7 @@ curl -X POST http://127.0.0.1:8001/rides ^
 Stop the stack:
 
 ```powershell
-docker compose -f infra/compose/docker-compose.yml down -v
+.\scripts\stop.ps1
 ```
 
 ## Test Matrix

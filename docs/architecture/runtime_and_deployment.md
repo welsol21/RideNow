@@ -29,13 +29,13 @@ Services:
 Start:
 
 ```powershell
-docker compose -f infra/compose/docker-compose.yml up -d --build
+.\scripts\start.ps1
 ```
 
 Stop:
 
 ```powershell
-docker compose -f infra/compose/docker-compose.yml down -v
+.\scripts\stop.ps1
 ```
 
 ## Kubernetes Runtime
