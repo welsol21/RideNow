@@ -35,9 +35,9 @@ docker compose -f infra/compose/docker-compose.yml logs -f notification
 Broker:
 
 ```powershell
-curl http://127.0.0.1:8001/health
-curl http://127.0.0.1:8001/ready
-curl http://127.0.0.1:8001/metrics
+Invoke-RestMethod "http://127.0.0.1:8001/health"
+Invoke-RestMethod "http://127.0.0.1:8001/ready"
+Invoke-WebRequest "http://127.0.0.1:8001/metrics"
 ```
 
 All services expose the same probe pattern on ports `8001` to `8007`.

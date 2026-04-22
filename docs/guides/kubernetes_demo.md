@@ -32,22 +32,38 @@ kubectl -n ridenow port-forward svc/broker 8001:8001
 In a second terminal:
 
 ```powershell
-curl http://127.0.0.1:8001/health
-curl http://127.0.0.1:8001/ready
+Invoke-RestMethod "http://127.0.0.1:8001/health"
+Invoke-RestMethod "http://127.0.0.1:8001/ready"
 ```
 
 ## Run a Demo Ride
 
 ```powershell
-curl -X POST http://127.0.0.1:8001/rides ^
-  -H "Content-Type: application/json" ^
-  -d "{\"customer_id\":\"customer-k8s\",\"pickup\":{\"lat\":53.3498,\"lon\":-6.2603},\"dropoff\":{\"lat\":53.3440,\"lon\":-6.2672}}"
+$body = @{
+  customer_id = "customer-demo"
+  pickup = @{
+    lat = 53.3498
+    lon = -6.2603
+  }
+  dropoff = @{
+    lat = 53.3440
+    lon = -6.2672
+  }
+} | ConvertTo-Json -Depth 5
+
+$response = Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://127.0.0.1:8001/rides" `
+  -ContentType "application/json" `
+  -Body $body
+
+$response
 ```
 
 Poll:
 
 ```powershell
-curl http://127.0.0.1:8001/rides/<ride-id>
+Invoke-RestMethod "http://127.0.0.1:8001/rides/<ride_id>"
 ```
 
 ## Inspect Logs

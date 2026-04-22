@@ -24,9 +24,9 @@ python -m venv .venv
 ## Verify Readiness
 
 ```powershell
-curl http://127.0.0.1:8001/ready
-curl http://127.0.0.1:8002/ready
-curl http://127.0.0.1:8007/ready
+Invoke-RestMethod "http://127.0.0.1:8001/ready"
+Invoke-RestMethod "http://127.0.0.1:8002/ready"
+Invoke-RestMethod "http://127.0.0.1:8007/ready"
 ```
 
 ## Manual End-to-End Demo
