@@ -142,5 +142,22 @@ services:
     ports:
       - "8007:8007"
 
+  prometheus:
+    image: prom/prometheus:v2.53.4
+    depends_on:
+      - broker
+      - driver
+      - route
+      - pricing
+      - payment
+      - tracking
+      - notification
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
 volumes:
   postgres_data:

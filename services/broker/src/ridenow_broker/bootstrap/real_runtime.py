@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from itertools import count
 from typing import TYPE_CHECKING
+from uuid import uuid4
 
 from ridenow_broker.adapters.health import StaticHealthCheckAdapter
 from ridenow_broker.core.application import (
@@ -73,18 +73,15 @@ async def create_real_runtime(settings: SharedServiceSettings) -> RealBrokerRunt
     health_check = HealthCheckUseCase(
         StaticHealthCheckAdapter(service_name=settings.service_name)
     )
-    ride_sequence = count(1)
-    issue_sequence = count(1)
-
     request_ride = RequestRideUseCase(
         status_store=ride_status_store,
         event_publisher=publisher,
-        ride_id_factory=lambda: f"ride-{next(ride_sequence)}",
+        ride_id_factory=lambda: f"ride-{uuid4().hex[:12]}",
     )
     issue_submission = IssueSubmissionUseCase(
         issue_store=issue_store,
         event_publisher=publisher,
-        issue_id_factory=lambda: f"issue-{next(issue_sequence)}",
+        issue_id_factory=lambda: f"issue-{uuid4().hex[:12]}",
     )
     ride_status = GetRideStatusUseCase(status_store=ride_status_store)
 

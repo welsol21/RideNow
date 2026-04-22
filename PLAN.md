@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `7.1`
+- Next unchecked item: `8.1`
 
 ## Phase 0 - Bootstrap
 
@@ -207,12 +207,12 @@
 
 ## Phase 7 - Smoke E2E & Observability
 
-- [ ] 7.1 E2E smoke tests
-- [ ] 7.2 Structured logging
-- [ ] 7.3 Metrics endpoint / minimal monitoring
-- [ ] 7.4 Health and readiness endpoints
-- [ ] 7.5 Full test:e2e + coverage + lint gate
-- [ ] 7.6 Write docs/state/PHASE_7_DONE.md
+- [x] 7.1 E2E smoke tests
+- [x] 7.2 Structured logging
+- [x] 7.3 Metrics endpoint / minimal monitoring
+- [x] 7.4 Health and readiness endpoints
+- [x] 7.5 Full test:e2e + coverage + lint gate
+- [x] 7.6 Write docs/state/PHASE_7_DONE.md
 
 ## Phase 8 - Non-Functional and Monitoring Gate
 

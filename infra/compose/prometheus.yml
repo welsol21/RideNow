@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: broker
+    static_configs:
+      - targets: ["broker:8001"]
+  - job_name: driver
+    static_configs:
+      - targets: ["driver:8002"]
+  - job_name: route
+    static_configs:
+      - targets: ["route:8003"]
+  - job_name: pricing
+    static_configs:
+      - targets: ["pricing:8004"]
+  - job_name: payment
+    static_configs:
+      - targets: ["payment:8005"]
+  - job_name: tracking
+    static_configs:
+      - targets: ["tracking:8006"]
+  - job_name: notification
+    static_configs:
+      - targets: ["notification:8007"]

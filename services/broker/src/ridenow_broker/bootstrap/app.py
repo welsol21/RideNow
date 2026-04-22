@@ -14,13 +14,19 @@ from ridenow_broker.adapters.http import (
 )
 from ridenow_broker.bootstrap.real_runtime import create_real_runtime
 from ridenow_broker.bootstrap.runtime import create_runtime
-from ridenow_shared import run_service_app
+from ridenow_shared import (
+    attach_metrics,
+    attach_request_logging,
+    configure_structured_logging,
+    run_service_app,
+)
 from ridenow_shared.config import SharedServiceSettings
 
 
 def create_app() -> FastAPI:
     """Create the Broker FastAPI application."""
 
+    configure_structured_logging()
     app = FastAPI(title="RideNow Broker", version="0.1.0")
     runtime_mode = os.getenv("RIDENOW_RUNTIME_MODE", "local")
     if runtime_mode == "real":
@@ -45,6 +51,8 @@ def create_app() -> FastAPI:
         create_issue_submission_router(lambda: app.state.runtime.issue_submission)
     )
     app.include_router(create_ride_status_router(lambda: app.state.runtime.ride_status))
+    attach_metrics(app, "broker")
+    attach_request_logging(app, "broker")
     return app
 
 

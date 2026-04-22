@@ -133,14 +133,28 @@ def create_runtime() -> BrokerRuntime:
 
         return delayed_handler
 
-    schedule_route_request = _schedule(0.1, route_request_relay_use_case.execute)
-    schedule_fare_request = _schedule(0.1, fare_request_relay_use_case.execute)
+    transition_delay_seconds = 0.25
+
+    schedule_route_request = _schedule(
+        transition_delay_seconds,
+        route_request_relay_use_case.execute,
+    )
+    schedule_fare_request = _schedule(
+        transition_delay_seconds,
+        fare_request_relay_use_case.execute,
+    )
     schedule_driver_location_update = _schedule(
-        0.1,
+        transition_delay_seconds,
         emit_driver_location_update_use_case.execute,
     )
-    schedule_trip_completed = _schedule(0.1, complete_trip_use_case.execute)
-    schedule_payment_capture = _schedule(0.1, capture_payment_use_case.execute)
+    schedule_trip_completed = _schedule(
+        transition_delay_seconds,
+        complete_trip_use_case.execute,
+    )
+    schedule_payment_capture = _schedule(
+        transition_delay_seconds,
+        capture_payment_use_case.execute,
+    )
 
     asyncio.run(
         event_bus.subscribe("RideRequested", notification_relay_use_case.execute)

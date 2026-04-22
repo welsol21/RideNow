@@ -10,6 +10,8 @@ import uvicorn
 from fastapi import FastAPI
 
 from ridenow_shared.config import SharedServiceSettings
+from ridenow_shared.logging import attach_request_logging, configure_structured_logging
+from ridenow_shared.metrics import attach_metrics
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
@@ -41,6 +43,9 @@ def create_probe_app(
         version="0.1.0",
         lifespan=lifespan,
     )
+    configure_structured_logging()
+    attach_metrics(app, service_name)
+    attach_request_logging(app, service_name)
 
     @app.get("/health")
     def health_check() -> dict[str, str]:
@@ -88,4 +93,5 @@ def run_service_app(module_path: str, default_service_name: str) -> None:
         host=settings.http.host,
         port=settings.http.port,
         log_level=settings.http.log_level,
+        access_log=False,
     )
