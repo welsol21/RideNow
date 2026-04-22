@@ -4,6 +4,8 @@
 .ruff_cache/
 .venv/
 .venv-docs/
+.tmp-docker-config/
+.tmp-pip-audit-cache/
 build/
 dist/
 docs/local/

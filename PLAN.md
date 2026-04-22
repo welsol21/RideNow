@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `8.1`
+- Next unchecked item: `9.1`
 
 ## Phase 0 - Bootstrap
 
@@ -216,12 +216,12 @@
 
 ## Phase 8 - Non-Functional and Monitoring Gate
 
-- [ ] 8.1 Performance/load tests
-- [ ] 8.2 Resilience/recovery tests
-- [ ] 8.3 Security/dependency audit
-- [ ] 8.4 Soak/reliability scaffolding
-- [ ] 8.5 Monitoring validation
-- [ ] 8.6 Write docs/state/PHASE_8_DONE.md
+- [x] 8.1 Performance/load tests
+- [x] 8.2 Resilience/recovery tests
+- [x] 8.3 Security/dependency audit
+- [x] 8.4 Soak/reliability scaffolding
+- [x] 8.5 Monitoring validation
+- [x] 8.6 Write docs/state/PHASE_8_DONE.md
 
 ## Phase 9 - Documentation
 
