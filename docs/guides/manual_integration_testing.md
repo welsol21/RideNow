@@ -25,6 +25,9 @@ Run the manual helper from Git Bash:
 ./scripts/integration_manual_test.sh happy
 ./scripts/integration_manual_test.sh no-driver
 ./scripts/integration_manual_test.sh payment-fail
+./scripts/integration_manual_test.sh trace happy
+./scripts/integration_manual_test.sh trace no-driver
+./scripts/integration_manual_test.sh trace payment-fail
 ./scripts/integration_manual_test.sh issue <ride_id>
 ./scripts/integration_manual_test.sh all
 ```
@@ -35,6 +38,48 @@ What it does:
 - prints the raw JSON response
 - polls `GET /rides/{ride_id}` until the expected final status
 - supports all three main user-visible ride flows plus issue submission
+
+## Trace Mode
+
+Use `trace` when you want to see the full observed customer-visible
+status path during polling:
+
+```bash
+./scripts/integration_manual_test.sh trace happy
+```
+
+What it adds:
+
+- faster polling
+- more polling attempts
+- a printed `Observed status path`
+- the JSON payload every time the visible status changes
+
+Example trace output:
+
+```text
+[01/50] ride-790dc9b45bc4 -> request-submitted
+[02/50] ride-790dc9b45bc4 -> driver-assigned
+[03/50] ride-790dc9b45bc4 -> eta-updated
+[04/50] ride-790dc9b45bc4 -> payment-authorised
+[05/50] ride-790dc9b45bc4 -> trip-in-progress
+[06/50] ride-790dc9b45bc4 -> ride-completed
+[07/50] ride-790dc9b45bc4 -> payment-confirmed
+
+== Observed status path ==
+request-submitted -> driver-assigned -> eta-updated -> payment-authorised -> trip-in-progress -> ride-completed -> payment-confirmed
+```
+
+Important limitation:
+
+- trace shows every status the script **observes during polling**
+- if the system moves through multiple statuses between two polls, some
+  intermediate states can still be skipped
+- you can make polling denser with:
+
+```bash
+RIDENOW_TRACE_POLL_ATTEMPTS=80 RIDENOW_TRACE_POLL_INTERVAL_SECONDS=0.1 ./scripts/integration_manual_test.sh trace happy
+```
 
 ## Raw Requests
 
