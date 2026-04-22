@@ -89,9 +89,18 @@ The main happy path is:
 
 ### Brief Explanation of the Event-Driven Architecture
 
-The event-driven architecture of RideNow was mainly shaped by three ideas: data-driven microservices, hexagonal architecture, and ROS 2. In particular, ROS 2 influenced how I thought about message passing between services. I liked the idea that the message channel behaves like a peripheral nervous system: an external signal enters the system, the relevant node reacts, and the rest of the platform can respond without everything being tied together through one long direct call chain.
+The architecture of RideNow was mainly shaped by four ideas:
 
-I applied the same principle here with RabbitMQ. Broker is the public entry point for the customer, but the ride flow itself is carried by smaller services that react to events and publish new ones. This reduces coupling between services, keeps responsibilities narrower, and allows the system to respond to new external input through asynchronous event propagation rather than through tightly coupled synchronous calls.
+- event-driven microservices
+- hexagonal architecture
+- ROS 2 as a model for responsive node-to-node communication
+- acceptance-first outside-in TDD in the London-school, interaction-based tradition
+
+ROS 2 especially influenced how I thought about message passing between services. I liked the idea that the message channel behaves like a peripheral nervous system: an external signal enters the system, the relevant node reacts, and the rest of the platform can respond without everything being tied together through one long direct call chain.
+
+The TDD influence appeared more in the way the system was developed than in the runtime itself. I approached the system from the outside in, starting with observable behaviour and service collaboration, then driving the internal implementation from those interactions.
+
+I applied these ideas here with RabbitMQ. Broker is the public entry point for the customer, but the ride flow itself is carried by smaller services that react to events and publish new ones. This reduces coupling between services, keeps responsibilities narrower, and allows the system to respond to new external input through asynchronous event propagation rather than through tightly coupled synchronous calls.
 
 #### Simple diagram
 
