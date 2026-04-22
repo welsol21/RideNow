@@ -1,44 +1,135 @@
 # RideNow
 
-RideNow is a multi-service ride-hailing platform implemented as a
-single repository with seven collaborating services:
+RideNow is a multi-service ride-hailing platform implemented in a single
+repository. The runtime topology contains seven collaborating services:
 
-- Broker
-- Driver
-- Route
-- Pricing
-- Payment
-- Tracking
-- Notification
+- `broker`
+- `driver`
+- `route`
+- `pricing`
+- `payment`
+- `tracking`
+- `notification`
 
-## Current State
+The system is built around a public Broker API, RabbitMQ-based
+service-to-service messaging, PostgreSQL-backed Broker state, and a
+Compose-hosted demo stack with monitoring.
 
-This repository is being rebuilt from the second implementation attempt
-using a stricter prompt that requires:
+## What Is Implemented
 
-- full-system integration-first delivery;
-- real service-to-service collaboration;
-- one-command local start and one-command local stop;
-- manual demoability with dummy/demo data.
+- Public customer API through `broker`
+  - `GET /health`
+  - `GET /ready`
+  - `GET /metrics`
+  - `POST /rides`
+  - `GET /rides/{ride_id}`
+  - `POST /issues`
+- Real service collaboration across all seven services
+  - `RideRequested -> DriverSearchRequested -> DriverAssigned`
+  - `DriverAssigned -> RouteRequested -> EtaUpdated`
+  - `EtaUpdated -> FareRequested -> FareEstimated`
+  - `FareEstimated -> PaymentAuthorisationRequested -> PaymentAuthorised`
+  - `PaymentAuthorised -> DriverLocationUpdated -> TrackingLocationUpdated`
+  - `TrackingLocationUpdated -> TripStatusUpdated -> TripProgressVisible`
+  - `TripCompleted -> RideCompletedVisible -> PaymentCaptureRequested`
+  - `PaymentCaptured -> PaymentConfirmedVisible`
+- Failure paths
+  - `no-driver-available`
+  - `payment-failed`
+- Secondary inbound adapter
+  - `ridenow-broker` CLI with `health`, `request-ride`, and `submit-issue`
+- Observability
+  - JSON request logs
+  - Prometheus metrics
+  - Compose Prometheus target scraping for all seven services
 
 ## Repository Layout
 
-- `services/` - service-specific source trees
-- `src/ridenow_shared/` - shared events, contracts, and config
-- `tests/` - acceptance, unit, contract, integration, e2e, and non-functional tests
-- `infra/` - Compose and Kubernetes assets
-- `docs/` - assignment, architecture, operations, and state documents
-- `scripts/` - top-level operational scripts
+- `services/` - service-specific code and composition roots
+- `src/ridenow_shared/` - shared events, adapters, config, metrics, logging
+- `tests/` - unit, acceptance, contracts, integration, e2e, nonfunctional
+- `infra/compose/` - local multi-service stack and Prometheus config
+- `infra/kubernetes/` - Kubernetes manifests for the seven services plus dependencies
+- `docs/` - architecture, operations, guides, and state docs
 
-## Bootstrap Tooling
+## Tech Stack
 
 - Python 3.12+
 - FastAPI
 - RabbitMQ
 - PostgreSQL
-- pytest
+- Prometheus
+- pytest, ruff, mypy, mkdocs-material
 
-## Next Steps
+## Quick Start
 
-Follow `PLAN.md`. The project uses outside-in TDD and progresses one
-task at a time with a commit after every checked item.
+1. Create and activate a virtual environment.
+2. Install the project with dev and docs extras.
+3. Start the full local stack with one command.
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\python.exe -m pip install -e ".[dev,docs,nonfunctional]"
+docker compose -f infra/compose/docker-compose.yml up -d --build
+```
+
+Probe the Broker:
+
+```powershell
+curl http://127.0.0.1:8001/health
+curl http://127.0.0.1:8001/ready
+```
+
+Submit a ride:
+
+```powershell
+curl -X POST http://127.0.0.1:8001/rides ^
+  -H "Content-Type: application/json" ^
+  -d "{\"customer_id\":\"customer-demo\",\"pickup\":{\"lat\":53.3498,\"lon\":-6.2603},\"dropoff\":{\"lat\":53.3440,\"lon\":-6.2672}}"
+```
+
+Stop the stack:
+
+```powershell
+docker compose -f infra/compose/docker-compose.yml down -v
+```
+
+## Test Matrix
+
+- Fast acceptance feedback
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q tests/acceptance
+```
+
+- Contract and integration coverage
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q tests/contracts tests/integration
+```
+
+- End-to-end and non-functional verification
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q tests/e2e tests/nonfunctional
+```
+
+- Full gate
+
+```powershell
+.\.venv\Scripts\python.exe -m ruff check src services tests
+.\.venv\Scripts\python.exe -m mypy src services tests/nonfunctional
+.\.venv\Scripts\python.exe -m pytest -q tests/unit tests/acceptance tests/contracts tests/integration tests/e2e tests/nonfunctional
+```
+
+## Documentation
+
+- Architecture: `docs/architecture/`
+- Operations: `docs/operations/`
+- Guides: `docs/guides/`
+- Build docs site:
+
+```powershell
+.\.venv\Scripts\python.exe -m mkdocs build --strict
+```

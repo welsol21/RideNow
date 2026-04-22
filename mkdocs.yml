@@ -1,0 +1,21 @@
+site_name: RideNow
+site_description: Multi-service RideNow architecture, operations, and demo guides.
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Architecture:
+      - Overview: architecture/overview.md
+      - Service Catalogue: architecture/service_catalogue.md
+      - Data Model: architecture/data_model.md
+      - Events: architecture/events.md
+      - Acceptance Catalogue: architecture/acceptance_catalogue.md
+      - Runtime and Deployment: architecture/runtime_and_deployment.md
+      - Testing Strategy: architecture/testing_strategy.md
+  - Operations:
+      - Runbook: operations/runbook.md
+      - Monitoring: operations/monitoring.md
+  - Guides:
+      - Running Locally: guides/running_locally.md
+      - Kubernetes Demo: guides/kubernetes_demo.md
+      - Broker Service Implementation: guides/broker_service_implementation.md

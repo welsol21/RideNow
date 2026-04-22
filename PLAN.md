@@ -11,7 +11,7 @@
 
 ## Current Pointer
 
-- Next unchecked item: `9.1`
+- Next unchecked item: `10.1`
 
 ## Phase 0 - Bootstrap
 
@@ -225,26 +225,26 @@
 
 ## Phase 9 - Documentation
 
-- [ ] 9.1 README.md
-- [ ] 9.2 docs/architecture/overview.md
-- [ ] 9.3 docs/architecture/service_catalogue.md
-- [ ] 9.4 docs/architecture/data_model.md
-- [ ] 9.5 docs/architecture/events.md
-- [ ] 9.6 docs/architecture/acceptance_catalogue.md
-- [ ] 9.7 docs/architecture/runtime_and_deployment.md
-- [ ] 9.8 docs/architecture/testing_strategy.md
-- [ ] 9.9 docs/operations/runbook.md
-- [ ] 9.10 docs/operations/monitoring.md
-- [ ] 9.11 docs/guides/running_locally.md
-- [ ] 9.12 docs/guides/kubernetes_demo.md
-- [ ] 9.13 docs/guides/broker_service_implementation.md
-- [ ] 9.14 Docs list required by the assignment:
+- [x] 9.1 README.md
+- [x] 9.2 docs/architecture/overview.md
+- [x] 9.3 docs/architecture/service_catalogue.md
+- [x] 9.4 docs/architecture/data_model.md
+- [x] 9.5 docs/architecture/events.md
+- [x] 9.6 docs/architecture/acceptance_catalogue.md
+- [x] 9.7 docs/architecture/runtime_and_deployment.md
+- [x] 9.8 docs/architecture/testing_strategy.md
+- [x] 9.9 docs/operations/runbook.md
+- [x] 9.10 docs/operations/monitoring.md
+- [x] 9.11 docs/guides/running_locally.md
+- [x] 9.12 docs/guides/kubernetes_demo.md
+- [x] 9.13 docs/guides/broker_service_implementation.md
+- [x] 9.14 Docs list required by the assignment:
       - list of microservices and identify the implementation scope of each
       - event-driven architecture overview
       - tests implemented and how to run them
       - monitoring overview
-- [ ] 9.15 Verify docs:build/check succeeds
-- [ ] 9.16 Write docs/state/PHASE_9_DONE.md
+- [x] 9.15 Verify docs:build/check succeeds
+- [x] 9.16 Write docs/state/PHASE_9_DONE.md
 
 ## Phase 10 - Turnkey Verification
 
