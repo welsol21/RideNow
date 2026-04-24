@@ -74,6 +74,10 @@ testable, but several parts are structured for later expansion:
   different transport, persistence pattern, or adapter policy, that logic
   can be moved from shared code into a service-local adapter without
   changing the external event contracts.
+- Shared adapter code does not mean one shared runtime instance across
+  the whole system. Each service still creates and owns its own runtime
+  objects in its own `bootstrap/app.py`, including its own RabbitMQ
+  publisher and consumer instances.
 - Most non-Broker services are stateless in the current scope. If the
   platform later requires service-owned persistence, each service already
   has an isolated package boundary and deployment unit that can take on
@@ -83,6 +87,15 @@ testable, but several parts are structured for later expansion:
   testability seams, not production policy. A more realistic version
   would replace them with real eligibility, routing, pricing, and payment
   decision logic behind the same service boundaries.
+
+| Aspect | Current implementation | Why | Possible next step |
+| --- | --- | --- | --- |
+| Runtime boundary | Separate runtime service per domain | Required by the assignment and preserved in the final topology | Keep as is |
+| Ports and application layer | Present per service | Supports the hexagonal structure and keeps business logic away from framework code | Enrich as service logic grows |
+| Service-local adapters | Minimal outside `broker` | Current flows do not need richer per-service inbound/outbound surfaces yet | Add service-specific HTTP, persistence, or third-party adapters |
+| Persistence | Mainly Broker-owned | Other services are mostly stateless in the current scope | Add service-owned datastores where long-lived state appears |
+| Shared infrastructure code | Centralised in `src/ridenow_shared/` | Avoids repeating identical RabbitMQ, logging, metrics, and config boilerplate | Split out when a service needs materially different adapter behaviour |
+| Domain layer depth | Light in several services | Current behaviour is simple enough to stay in use-case code | Add richer entities, value objects, and policy rules as complexity grows |
 
 ## Tech Stack
 
